@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  cat <<USAGE
+Usage: sb [options] ["capture text"]
+
+Capture a thought to today's daily note.
+
+Options:
+  --open              Open today's note in \$EDITOR (default: vi)
+  --editor            Open \$EDITOR for multi-line capture
+  --type meeting      Add to ## Meetings section instead of ## Captures
+  --project <slug>    Pre-tag with #project/<slug>
+  --tag foo,bar       Add custom tags (comma-separated, no # prefix)
+  --no-timestamp      Omit [HH:MM] timestamp prefix
+  --help              Show this help
+
+Examples:
+  sb "had a great idea about X"
+  sb --type meeting "sprint review notes"
+  sb --project second-brain "refactor the archive skill"
+  sb --tag urgent,ideas "need to rethink the approach"
+  sb --open
+  sb --editor
+USAGE
+  exit 0
+}
+
+OPEN=false
+EDITOR_MODE=false
+SECTION="## Captures"
+PROJECT_SLUG=""
+CUSTOM_TAGS=""
+NO_TIMESTAMP=false
+TEXT=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --open) OPEN=true; shift ;;
+    --editor) EDITOR_MODE=true; shift ;;
+    --type)
+      if [[ "${2:-}" == "meeting" ]]; then
+        SECTION="## Meetings"
+      fi
+      shift 2
+      ;;
+    --project) PROJECT_SLUG="${2:-}"; shift 2 ;;
+    --tag) CUSTOM_TAGS="${2:-}"; shift 2 ;;
+    --no-timestamp) NO_TIMESTAMP=true; shift ;;
+    --help) usage ;;
+    --*) echo "Error: Unknown option: $1" >&2; usage ;;
+    *) TEXT="$1"; shift ;;
+  esac
+done
+
+if ! command -v foam &>/dev/null; then
+  echo "Error: foam-cli not found. Install: npm install -g foam-cli" >&2
+  exit 1
+fi
+
+NOTE_PATH=$(foam daily --create --path-only)
+
+if [ "$OPEN" = true ]; then
+  exec "${EDITOR:-vi}" "$NOTE_PATH"
+fi
+
+if [ "$EDITOR_MODE" = true ] && [ -z "$TEXT" ]; then
+  TMPFILE=$(mktemp)
+  "${EDITOR:-vi}" "$TMPFILE"
+  TEXT=$(cat "$TMPFILE")
+  rm "$TMPFILE"
+fi
+
+if [ -z "$TEXT" ]; then
+  echo "Error: No capture text provided." >&2
+  echo "Usage: sb \"your thought here\"" >&2
+  exit 1
+fi
+
+TAGS=()
+if [ -n "$PROJECT_SLUG" ]; then
+  TAGS+=("#project/$PROJECT_SLUG")
+fi
+if [ -n "$CUSTOM_TAGS" ]; then
+  IFS=',' read -ra ADDR <<< "$CUSTOM_TAGS"
+  for tag in "${ADDR[@]}"; do
+    TAGS+=("#$tag")
+  done
+fi
+
+TAG_SUFFIX=""
+if [ ${#TAGS[@]} -gt 0 ]; then
+  TAG_SUFFIX=" ${TAGS[*]}"
+fi
+
+TIMESTAMP=""
+if [ "$NO_TIMESTAMP" = false ]; then
+  TIMESTAMP="[$(date '+%H:%M')] "
+fi
+
+CAPTURE_LINE="- ${TIMESTAMP}${TEXT}${TAG_SUFFIX}"
+
+awk -v section="$SECTION" -v line="$CAPTURE_LINE" '
+{
+  print
+  if ($0 == section) {
+    print line
+  }
+}
+' "$NOTE_PATH" > "${NOTE_PATH}.tmp" && mv "${NOTE_PATH}.tmp" "$NOTE_PATH"
+
+echo "✓ Captured to $NOTE_PATH"

@@ -4,6 +4,8 @@ A personal knowledge system for turning scattered inputs into reusable thinking.
 
 **Prerequisite:** `foam-cli` installed globally (`npm install -g foam-cli`). The `sb` CLI delegates to `foam daily` for daily note creation.
 
+**Install `sb` CLI:** Add `bin/` to your PATH or symlink: `ln -sf "$PWD/bin/sb" ~/.local/bin/sb`
+
 **Workflow:** capture → review → promote → manage
 
 ## Vault structure

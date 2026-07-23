@@ -6,6 +6,8 @@ argument-hint: "path=<relative-path>"
 
 # Archive Project
 
+See [shared patterns](../_shared/patterns.md) for trigger mode conventions, index note maintenance, and OKF frontmatter.
+
 Move a project from `/projects/` to `/archive/`, reviewing for salvageable content before moving, and updating index notes.
 
 ## Archive trigger

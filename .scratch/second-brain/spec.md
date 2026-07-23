@@ -53,7 +53,7 @@ A VS Code + Foam-based second brain vault with three layers: (1) a frictionless 
 37. As a user, I want meeting notes to start as content in the daily note's `## Meetings` section and be promoted to standalone files by the review pass if substantive, so that capture stays fast.
 38. As a user, I want the `sb` CLI to support flags: `--open` (open daily note), `--editor` (multi-line input), `--type meeting` (adds to ## Meetings), `--project x` (pre-tags), `--tag foo,bar` (custom tags), `--no-timestamp`, so that the CLI covers common scenarios.
 39. As a user, I want `tasks.md` to use markdown checkboxes (`- [ ]`), `[[wikilinks]]` back to source notes, and be grouped by project heading, so that I can track and navigate tasks.
-40. As a user, I want auto-generated index notes (`_projects.md`, `_areas.md`, `_resources.md`) listing all notes of each type with status, updated during review pass, so that I have navigable overviews.
+40. As a user, I want auto-generated index notes (`_projects.md`, `_areas.md`, `_resources.md`, `_archive.md`) listing all notes of each type with status, updated during review/archive passes, so that I have navigable overviews.
 41. As a user, I want when a note upgrades to a folder, its `index.md` to serve as that folder's MOC listing sub-notes, so that folder-level navigation is automatic.
 
 ## Implementation Decisions
@@ -66,9 +66,9 @@ A VS Code + Foam-based second brain vault with three layers: (1) a frictionless 
 - **Review pass**: A skill file at `.agents/skills/review/SKILL.md`. Invoked manually by the user. Uses AI (GitHub Copilot) to process unprocessed captures.
 - **Review actions**: For each unprocessed capture, the AI: (1) adds PARA type tag, (2) suggests `[[wikilinks]]` to existing notes, (3) extracts `[action:]` items, (4) promotes URL captures by fetching and synthesizing, (5) marks with ✅.
 - **Task aggregation**: The review pass maintains `## Tasks` sections in project notes and a root `tasks.md` that aggregates all actions with `[[wikilinks]]` back to source notes. `tasks.md` format: checkboxes `- [ ]`, grouped by `## Project: Name`.
-- **Index notes**: `_projects.md`, `_areas.md`, `_resources.md` at vault root. Simple link lists with status badges. Updated at the end of each review pass.
+- **Index notes**: `_projects.md`, `_areas.md`, `_resources.md`, `_archive.md` at vault root. Simple link lists with status badges. Updated at the end of each review pass; `_archive.md` is updated by the archive skill.
 - **Folder index.md**: When a note upgrades to a folder, `index.md` serves as the MOC for that folder, listing sub-notes. Maintained by the review pass.
-- **Vault structure**: `/daily/`, `/projects/`, `/areas/`, `/resources/`, `/archive/`, `tasks.md`, `_projects.md`, `_areas.md`, `_resources.md` (root). Assets in `/assets/`.
+- **Vault structure**: `/daily/`, `/projects/`, `/areas/`, `/resources/`, `/archive/`, `tasks.md`, `_projects.md`, `_areas.md`, `_resources.md`, `_archive.md` (root). Assets in `/assets/`.
 - **Frontmatter**: Promoted notes get OKF-compliant YAML frontmatter: `title`, `type`, `description`, `tags`, `relationships`, `timestamp`.
 - **Resource notes**: Created by the review pass (from URL captures) or manually via skill/template. AI determines sections based on source type (article, book, video, concept). Flat files by default, upgradeable to folders. AI suggests archiving outdated resources.
 - **Vault structure**: `/daily/`, `/projects/`, `/areas/`, `/resources/`, `/archive/`, `tasks.md` (root). Assets in `/assets/`.

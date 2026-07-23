@@ -6,6 +6,8 @@ argument-hint: "path=<relative-or-absolute-path>"
 
 # Promote to Folder
 
+See [shared patterns](../_shared/patterns.md) for trigger mode conventions, slug derivation, and index note maintenance.
+
 Convert a single-file note (`projects/<slug>.md`) to a folder (`projects/<slug>/index.md`), moving related notes inside and rewriting all `[[wikilinks]]`.
 
 ## Promotion trigger

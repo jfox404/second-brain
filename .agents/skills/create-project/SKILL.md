@@ -6,20 +6,24 @@ argument-hint: "name=<title> type=project|area format=file|folder sections=overv
 
 # Create Project/Area
 
+See [shared patterns](../_shared/patterns.md) for OKF frontmatter conventions and slug derivation.
+
 Two branches — **wizard mode** when the user provides no arguments (asks interactively), **argument mode** when they do.
 
 ## Common invariant (both modes)
 
-Every note gets this frontmatter:
+Every note gets this OKF-compliant frontmatter:
 
 ```yaml
 ---
 title: <Title>
 type: project|area
+description: <1-2 sentence summary>
 status: active
 started: <YYYY-MM-DD>
 tags: []
-related: []
+relationships: {}
+timestamp: <YYYY-MM-DDTHH:MM:SS±HH:MM>
 ---
 ```
 
@@ -52,7 +56,7 @@ Accept these named parameters:
 | `format` | `file` or `folder` (default: `file`) | No |
 | `sections` | Comma-separated list of sections to include | No (default: overview, tasks, goals for projects, no goals for areas) |
 | `tags` | Comma-separated tags | No |
-| `related` | Comma-separated wikilink titles | No |
+| `related` | Comma-separated wikilink titles (maps to `relationships` in frontmatter) | No |
 | `target` | Target completion date for projects | No |
 
 Apply defaults for any missing parameter and proceed to creation.
@@ -109,9 +113,9 @@ Only include the sections the user (wizard) or caller (argument mode) selected.
 ## Completion criteria
 
 - Note file or folder created at the correct path
-- Frontmatter has `title`, `type`, `status: active`, `started` with today's date
+- Frontmatter has `title`, `type`, `description`, `status: active`, `started`, `tags`, `relationships`, `timestamp` with today's date
 - Project notes include `target` if specified
 - Area notes never include a Goals section
 - Only the selected sections appear in the body
-- Tags and related notes are in the frontmatter if provided
+- Tags and related notes are in the frontmatter (`tags`, `relationships`) if provided
 - User has been told the path

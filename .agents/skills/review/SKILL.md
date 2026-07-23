@@ -7,6 +7,8 @@ argument-hint: "Run the review pass on today's daily note captures"
 
 # Review — Capture Enrichment
 
+See [shared patterns](../_shared/patterns.md) for index note conventions and OKF frontmatter.
+
 Process unprocessed captures in today's daily note (`/daily/YYYY-MM-DD.md`).
 
 A **capture** is a bullet line in the `## Captures` section starting with `- [HH:MM]`. An **unprocessed** capture is one without the `✅` prefix (`- ✅ [HH:MM]`).
