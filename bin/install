@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+INSTALL_DIR="${INSTALL_DIR:-$HOME/.local/bin}"
+SB_SOURCE="$(cd "$(dirname "$0")" && pwd)/sb"
+
+echo "==> Second Brain CLI installer"
+
+if ! command -v node &>/dev/null; then
+  echo "Error: Node.js is required. Install it first (e.g. via nvm)." >&2
+  exit 1
+fi
+
+if ! command -v foam &>/dev/null; then
+  echo "==> Installing foam-cli globally..."
+  npm install -g foam-cli
+else
+  echo "==> foam-cli already installed ($(foam --version))"
+fi
+
+mkdir -p "$INSTALL_DIR"
+
+if [ -L "$INSTALL_DIR/sb" ]; then
+  echo "==> Updating existing symlink at $INSTALL_DIR/sb"
+elif [ -f "$INSTALL_DIR/sb" ]; then
+  echo "Warning: $INSTALL_DIR/sb already exists as a regular file — skipping symlink" >&2
+  exit 1
+fi
+
+ln -sf "$SB_SOURCE" "$INSTALL_DIR/sb"
+echo "==> Symlinked sb → $INSTALL_DIR/sb"
+
+if ! echo "$PATH" | tr ':' '\n' | grep -qx "$INSTALL_DIR" &>/dev/null; then
+  echo ""
+  echo "⚠  $INSTALL_DIR is not in your PATH. Add this to your shell config:"
+  echo "   export PATH=\"\$PATH:$INSTALL_DIR\""
+fi
+
+echo ""
+echo "Done. Try: sb --help"
