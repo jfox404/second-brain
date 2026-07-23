@@ -4,8 +4,7 @@
 
 **Promote-to-folder skill** (`.agents/skills/promote-project/SKILL.md`):
 - Converts a single project/area/resource file to a folder: `projects/<slug>.md` → `projects/<slug>/index.md`
-- Moves any related notes (wiki-referenced or co-located) into the folder
-- Updates `[[wikilinks]]` in other notes that reference the moved file
+- Moves any related notes (wiki-referenced or co-located) into the folder using `foam note move` to automatically rewrite all `[[wikilinks]]`
 - AI also suggests promotion when it detects accumulated sub-notes during review
 
 **Archive skill** (`.agents/skills/archive-project/SKILL.md`):

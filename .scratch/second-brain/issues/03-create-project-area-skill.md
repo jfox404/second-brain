@@ -6,7 +6,7 @@ Supports two modes:
 - **Wizard mode** (no arguments): asks for name, type (project/area), file or folder, which sections to include (overview, tasks, goals, open loops, decisions, related notes, stakeholders — no goals for areas)
 - **Argument mode** (called by review skill or with CLI arguments): accepts the same fields as parameters
 
-Creates the note with YAML frontmatter: `title`, `type`, `status` (active), `started`, `target` (projects only), `tags`, `related`. Creates as single file or folder with `index.md`.
+Creates the note with YAML frontmatter: `title`, `type`, `status` (active), `started`, `target` (projects only), `tags`, `related`. Uses `foam note create --title "..." --dir projects --property type=project --property status=active` for note creation. Creates as single file or folder with `index.md`.
 
 **Blocked by:** 01 — Vault scaffold and sb CLI.
 

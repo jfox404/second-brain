@@ -58,7 +58,7 @@ A VS Code + Foam-based second brain vault with three layers: (1) a frictionless 
 
 ## Implementation Decisions
 
-- **Capture path**: `sb "thought"` appends `- [HH:MM] thought` to `/daily/YYYY-MM-DD.md` under a `## Captures` heading. The CLI creates the file and heading if they don't exist.
+- **Capture path**: `sb "thought"` delegates to `foam daily --create --path-only` for note creation, then appends `- [HH:MM] thought` to `/daily/YYYY-MM-DD.md` under `## Captures`.
 - **CLI flags**: `--open` (opens daily note in $EDITOR), `--editor` (opens $EDITOR for multi-line), `--type meeting` (appends to ## Meetings), `--project x` (pre-tags `#project/x`), `--tag foo,bar` (custom tags), `--no-timestamp`, `--help`. Implemented as a bash script.
 - **Daily note template**: Frontmatter with `date: YYYY-MM-DD`. Sections: `## Today's Focus`, `## Captures`, `## Meetings`. Created on first capture of the day.
 - **Meeting notes**: Start in the daily note's `## Meetings` section. The review pass promotes substantive meetings to standalone files.
@@ -76,7 +76,7 @@ A VS Code + Foam-based second brain vault with three layers: (1) a frictionless 
 - **Foam config**: Daily notes at `/daily/YYYY-MM-DD.md`. Wikilinks enabled. Graph view configured to color by `type` frontmatter field.
 - **Project creation skill**: A skill at `.agents/skills/create-project/SKILL.md`. Supports wizard mode (ask which sections to include) and argument mode for non-interactive use. Available sections: overview, tasks, goals, open loops, decisions, related notes, stakeholders.
 - **Project note lifecycle**: Frontmatter has `status` (active/paused/completed/archived), `started`, `target`. Projects start as single files under `/projects/<slug>.md`. When promoted notes accumulate, AI or user invokes a promote-to-folder skill.
-- **Promote-to-folder skill**: A skill at `.agents/skills/promote-project/SKILL.md`. Converts a project file to `projects/<slug>/index.md`, moves associated notes into the folder, updates wikilinks.
+- **Promote-to-folder skill**: A skill at `.agents/skills/promote-project/SKILL.md`. Converts a project file to `projects/<slug>/index.md`, moves associated notes into the folder using `foam note move` (which auto-rewrites all wikilinks).
 - **Archive skill**: A skill at `.agents/skills/archive-project/SKILL.md`. Moves project to `/archive/`. Before archiving, reviews project content and proposes resource note promotion for salvageable knowledge. AI suggests archiving for projects with prolonged inactivity.
 - **Area notes**: Same structure as projects but no goals section. Never archived. Under `/areas/`.
 - **Git**: Local-only, no remote configured. No auto-commit or sync.
@@ -98,4 +98,4 @@ No formal testing. The user will validate the system by using it.
 
 ## Further Notes
 
-Setup prerequisite: VS Code with Foam extension. The `sb` CLI is a bash script installed to the user's PATH. The review skill assumes GitHub Copilot is available in VS Code.
+Setup prerequisite: VS Code with Foam extension, `foam-cli` installed globally (`npm install -g foam-cli`). The `sb` CLI is a thin bash wrapper around `foam daily`. The review skill assumes GitHub Copilot is available in VS Code.
