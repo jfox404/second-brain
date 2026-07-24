@@ -67,3 +67,23 @@ _Avoid_: Metadata
 **Vault**:
 The entire repository: all markdown files, assets, and configuration. Git-tracked, local-first.
 _Avoid_: Workspace, knowledge base, wiki
+
+**Legacy vault**:
+A previous second-brain vault (same VS Code + Foam + PARA toolchain) whose content is being imported into the primary vault. Defunct after import completes.
+_Avoid_: Old sb, source vault
+
+**Primary vault**:
+This vault — the surviving second brain that absorbs content from legacy vaults.
+_Avoid_: New vault, destination vault
+
+**Import**:
+The AI-assisted process of reading a file or directory from a legacy vault, transforming its frontmatter to OKF, and copying it into the corresponding PARA folder in the primary vault. Guided by the import skill with user approval at each step.
+_Avoid_: Migration, merge, copy-paste
+
+**Import cascade**:
+When an imported note contains wikilinks to notes not yet in the primary vault, the skill offers to import those linked notes as well, one at a time with user approval.
+_Avoid_: Auto-import, bulk import
+
+**Import source**:
+A file path or directory path from a legacy vault, passed to the import skill as the start of an import operation.
+_Avoid_: Input, path arg
