@@ -8,7 +8,7 @@ argument-hint: "path=<relative-or-absolute-path>"
 
 See [shared patterns](../_shared/patterns.md) for trigger mode conventions, slug derivation, and index note maintenance.
 
-Convert a single-file note (`projects/<slug>.md`) to a folder (`projects/<slug>/index.md`), moving related notes inside and rewriting all `[[wikilinks]]`.
+Convert a single-file note (`01 - Projects/<slug>.md`) to a folder (`01 - Projects/<slug>/index.md`), moving related notes inside and rewriting all `[[wikilinks]]`.
 
 ## Promotion trigger
 
@@ -21,20 +21,20 @@ This skill runs in two modes:
 
 ### 1. Identify the source note
 
-The source is a single `.md` file in `/projects/`, `/areas/`, or `/resources/`. Determine:
+The source is a single `.md` file in `/01 - Projects/`, `/02 - Areas/`, or `/03 - Resources/`. Determine:
 
 - **Path** — from the argument or user-provided input
-- **Slug** — the filename without `.md`: `projects/my-project.md` → `my-project`
+- **Slug** — the filename without `.md`: `01 - Projects/my-project.md` → `my-project`
 - **Type directory** — `projects`, `areas`, or `resources` (from the parent folder)
 - **Title** — from YAML frontmatter `title` field
 
-Validate the file exists and is not already a folder (`projects/slug/index.md` is already promoted — skip).
+Validate the file exists and is not already a folder (`01 - Projects/slug/index.md` is already promoted — skip).
 
 ### 2. Find related notes
 
 Search the vault for notes that reference the source note via `[[slug]]` or `[[Title]]`. Use `foam links` to get inbound and outbound links.
 
-Also scan for co-located notes in the same directory with the same slug prefix (e.g. `projects/my-project-backend.md` alongside `projects/my-project.md`).
+Also scan for co-located notes in the same directory with the same slug prefix (e.g. `01 - Projects/my-project-backend.md` alongside `01 - Projects/my-project.md`).
 
 Compile a list of related notes — these are candidates to move into the folder.
 
@@ -43,11 +43,11 @@ Compile a list of related notes — these are candidates to move into the folder
 Show the user:
 
 ```
-Plan: Promote projects/<slug>.md to projects/<slug>/index.md
+Plan: Promote 01 - Projects/<slug>.md to 01 - Projects/<slug>/index.md
 
 Related notes to move:
-  - projects/related-note.md → projects/slug/related-note.md
-  - areas/some-topic.md → projects/slug/some-topic.md  (cross-type)
+  - 01 - Projects/related-note.md → 01 - Projects/slug/related-note.md
+  - 02 - Areas/some-topic.md → 01 - Projects/slug/some-topic.md  (cross-type)
 ```
 
 Ask the user to confirm the move. Let the user remove any related notes from the move list.

@@ -1,6 +1,6 @@
 ---
 name: archive-project
-description: Archive a completed or stale project to /archive/. Use when the user wants to archive a project, or when the daily review skill suggests archiving a stale project with no recent captures for 30+ days.
+description: Archive a completed or stale project to /04 - Archive/. Use when the user wants to archive a project, or when the daily review skill suggests archiving a stale project with no recent captures for 30+ days.
 argument-hint: "path=<relative-path>"
 ---
 
@@ -8,7 +8,7 @@ argument-hint: "path=<relative-path>"
 
 See [shared patterns](../_shared/patterns.md) for trigger mode conventions, index note maintenance, and OKF frontmatter.
 
-Move a project from `/projects/` to `/archive/`, reviewing for salvageable content before moving, and updating index notes.
+Move a project from `/01 - Projects/` to `/04 - Archive/`, reviewing for salvageable content before moving, and updating index notes.
 
 ## Archive trigger
 
@@ -23,7 +23,7 @@ Only projects (not areas or resources) can be archived. Area notes are never arc
 
 ### 1. Identify the project
 
-The source is a project at `/projects/<slug>.md` or `/projects/<slug>/index.md` (folder). Determine:
+The source is a project at `/01 - Projects/<slug>.md` or `/01 - Projects/<slug>/index.md` (folder). Determine:
 
 - **Path** — from argument or user input
 - **Slug** — directory name or filename without `.md`
@@ -31,7 +31,7 @@ The source is a project at `/projects/<slug>.md` or `/projects/<slug>/index.md` 
 - **Format** — single file or folder
 
 Validate that:
-- The source exists under `/projects/`
+- The source exists under `/01 - Projects/`
 - It has `type: project` in frontmatter
 - It is not already archived (status should not be `archived`)
 
@@ -41,7 +41,7 @@ Before archiving, review all notes in the project (the index note and any sub-no
 
 For each note, check:
 
-- **Concept definitions** — is there a standalone concept, framework, or technique that belongs in `/resources/`?
+- **Concept definitions** — is there a standalone concept, framework, or technique that belongs in `/03 - Resources/`?
 - **Lessons learned** — are there retrospective insights worth keeping accessible?
 - **Reusable patterns** — are there configurations, templates, or code snippets useful beyond this project?
 - **Unique reference data** — are there links, comparisons, or research summaries worth keeping?
@@ -49,11 +49,11 @@ For each note, check:
 If any salvageable content is found, **do not move it automatically**. Instead, present to the user:
 
 ```
-Salvage candidates from projects/<slug>:
+Salvage candidates from 01 - Projects/<slug>:
 
-  - "Concept X" — brief definition → propose as resources/concept-x.md
-  - "Lessons learned" — retrospective insights → propose as resources/lessons-from-slug.md
-  - "Useful script" — reusable pattern → propose as resources/slug-scripts.md
+  - "Concept X" — brief definition → propose as 03 - Resources/concept-x.md
+  - "Lessons learned" — retrospective insights → propose as 03 - Resources/lessons-from-slug.md
+  - "Useful script" — reusable pattern → propose as 03 - Resources/slug-scripts.md
 
 Proceed with these promotions? [y/n]
 ```
@@ -61,7 +61,7 @@ Proceed with these promotions? [y/n]
 If the user agrees, create each promoted resource note:
 
 1. Derive a slug from the content title
-2. Write the file at `/resources/<slug>.md` with OKF frontmatter:
+2. Write the file at `/03 - Resources/<slug>.md` with OKF frontmatter:
 
 ```yaml
 ---
@@ -93,8 +93,8 @@ Add `archived` date field; change `status` from `active`/`paused`/`completed` to
 
 ### 4. Move to archive
 
-- **Single file**: `foam note move projects/<slug>.md archive/<slug>.md` — rewrites all `[[wikilinks]]` vault-wide
-- **Folder**: `mv projects/<slug> archive/<slug>` — preserves the folder structure and sub-notes
+- **Single file**: `foam note move 01 - Projects/<slug>.md 04 - Archive/<slug>.md` — rewrites all `[[wikilinks]]` vault-wide
+- **Folder**: `mv 01 - Projects/<slug> 04 - Archive/<slug>` — preserves the folder structure and sub-notes
 
 ### 5. Update index notes
 
@@ -107,7 +107,7 @@ Add `archived` date field; change `status` from `active`/`paused`/`completed` to
 - [[Project Name]] — _Short description_
 ```
 
-Scan `/archive/` for all project folders and files to build the list.
+Scan `/04 - Archive/` for all project folders and files to build the list.
 
 ### 6. Update tasks.md
 
@@ -128,7 +128,7 @@ to keep the record but signal it's no longer active.
 ### 7. Report back
 
 ```
-Archived projects/<slug> → archive/<slug>
+Archived 01 - Projects/<slug> → 04 - Archive/<slug>
   - Resource promotions created: <count>
   - _projects.md updated
   - _archive.md updated
@@ -137,7 +137,7 @@ Archived projects/<slug> → archive/<slug>
 
 ## Completion criteria
 
-- Project moved to `/archive/`
+- Project moved to `/04 - Archive/`
 - Frontmatter updated with `status: archived` and `archived` date
 - Salvageable content promoted to resources (if user agreed)
 - `_projects.md` updated (entry removed)

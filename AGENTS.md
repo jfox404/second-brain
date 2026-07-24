@@ -12,11 +12,11 @@ A personal knowledge system for turning scattered inputs into reusable thinking.
 
 | Directory | Purpose |
 |---|---|
-| `/daily/` | Daily notes (capture surface) |
-| `/projects/` | Time-bound outcomes |
-| `/areas/` | Ongoing responsibilities |
-| `/resources/` | Reference/evergreen material |
-| `/archive/` | Completed or stale projects |
+| `/00 - Daily/` | Daily notes (capture surface) |
+| `/01 - Projects/` | Time-bound outcomes |
+| `/02 - Areas/` | Ongoing responsibilities |
+| `/03 - Resources/` | Reference/evergreen material |
+| `/04 - Archive/` | Completed or stale projects |
 | `/assets/` | Images and attachments |
 
 ## Custom skills

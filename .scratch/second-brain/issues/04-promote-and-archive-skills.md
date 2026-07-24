@@ -8,7 +8,7 @@
 - AI also suggests promotion when it detects accumulated sub-notes during daily review
 
 **Archive skill** (`.agents/skills/archive-project/SKILL.md`):
-- Moves a project from `/projects/` to `/archive/`
+- Moves a project from `/01 - Projects/` to `/04 - Archive/`
 - Before moving, reviews all project notes for knowledge worth promoting to a resource note
 - Proposes resource promotions to the user
 - Updates index notes (`_projects.md`, `_areas.md`)
@@ -21,6 +21,6 @@
 - [ ] `promote-project` skill exists and converts file to folder
 - [ ] Related notes are moved into the folder
 - [ ] `[[wikilinks]]` are updated in other notes
-- [ ] `archive-project` skill exists and moves to `/archive/`
+- [ ] `archive-project` skill exists and moves to `/04 - Archive/`
 - [ ] Archive skill reviews for salvageable content before archiving
 - [ ] Index notes updated after both operations

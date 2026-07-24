@@ -35,7 +35,7 @@ When the user invokes the skill without providing arguments:
 
 1. **Ask for the note title** — a short descriptive name.
 2. **Ask the type** — project (time-bound outcome) or area (ongoing responsibility).
-3. **Ask for format** — single file (`projects/<slug>.md`) or folder (`projects/<slug>/index.md`).
+3. **Ask for format** — single file (`01 - Projects/<slug>.md`) or folder (`01 - Projects/<slug>/index.md`).
 4. **Ask for sections** — present the list: overview, tasks, goals, open loops, decisions, related notes, stakeholders. Let the user pick any subset. (Area notes cannot include goals per the invariant above.)
 5. **Ask for tags** (optional) — comma-separated list.
 6. **Ask for related notes** (optional) — comma-separated wikilink titles.
@@ -64,7 +64,7 @@ Apply defaults for any missing parameter and proceed to creation.
 ## Common creation steps
 
 1. **Derive the slug** from the title: lowercase, spaces to hyphens, strip non-alphanumeric except hyphens.
-2. **Determine the directory** — `projects` for project type, `areas` for area type.
+2. **Determine the directory** — `01 - Projects` for project type, `02 - Areas` for area type.
 3. **Build the frontmatter** with today's date as `started`.
 4. **Build the body** with the selected sections (see Section templates below).
 5. **Create the file:**

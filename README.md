@@ -29,11 +29,11 @@ Manage  → Create projects/areas, promote to folders, archive
 
 | Directory | Purpose |
 |---|---|
-| `daily/` | Daily notes — the default capture surface |
-| `projects/` | Time-bound outcomes with tasks, goals, decisions |
-| `areas/` | Ongoing responsibilities (health, career, etc.) |
-| `resources/` | Reference/evergreen material |
-| `archive/` | Completed or stale projects |
+| `00 - Daily/` | Daily notes — the default capture surface |
+| `01 - Projects/` | Time-bound outcomes with tasks, goals, decisions |
+| `02 - Areas/` | Ongoing responsibilities (health, career, etc.) |
+| `03 - Resources/` | Reference/evergreen material |
+| `04 - Archive/` | Completed or stale projects |
 | `assets/` | Images and attachments |
 
 Top-level files:

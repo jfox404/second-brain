@@ -9,7 +9,7 @@ argument-hint: "Run the daily review on today's daily note captures"
 
 See [shared patterns](../_shared/patterns.md) for index note conventions and OKF frontmatter.
 
-Process unprocessed captures in today's daily note (`/daily/YYYY-MM-DD.md`).
+Process unprocessed captures in today's daily note (`/00 - Daily/YYYY-MM-DD.md`).
 
 A **capture** is a bullet line in the `## Captures` section starting with `- [HH:MM]`. An **unprocessed** capture is one without the `✅` prefix (`- ✅ [HH:MM]`).
 
@@ -17,7 +17,7 @@ A **capture** is a bullet line in the `## Captures` section starting with `- [HH
 
 ### 1. Identify today's daily note
 
-Read `/daily/` to find today's date file. If it does not exist, report nothing to process and stop.
+Read `/00 - Daily/` to find today's date file. If it does not exist, report nothing to process and stop.
 
 ### 2. Find unprocessed captures
 
@@ -52,7 +52,7 @@ Formats recognized:
 If the capture contains a URL (http/https), fetch the linked content and synthesize a promoted resource note:
 
 1. Fetch the content at the URL
-2. Create a file at `/resources/<slug>.md` with OKF frontmatter:
+2. Create a file at `/03 - Resources/<slug>.md` with OKF frontmatter:
    ```yaml
    ---
    title: <title from page or capture>
@@ -75,7 +75,7 @@ Change the capture prefix from `- ` to `- ✅ `.
 
 For every action item (`[action:]`) extracted in step 3c, determine the target project from context or the `#project/<slug>` tag.
 
-For each project note at `/projects/<slug>.md` (or `projects/<slug>/index.md`):
+For each project note at `/01 - Projects/<slug>.md` (or `01 - Projects/<slug>/index.md`):
 
 - If the file does not exist, **flag it** (see step 8)
 - If it exists, add or update its `## Tasks` section:
@@ -130,11 +130,11 @@ Create or update these three index notes at vault root:
 - [[Resource Name]] — _Short description_
 ```
 
-Scan each directory (`/projects/`, `/areas/`, `/resources/`) for `.md` files and subfolder index notes. Include every note found. Use the `status` from YAML frontmatter for projects. Prefer existing index notes — update them rather than replace them.
+Scan each directory (`/01 - Projects/`, `/02 - Areas/`, `/03 - Resources/`) for `.md` files and subfolder index notes. Include every note found. Use the `status` from YAML frontmatter for projects. Prefer existing index notes — update them rather than replace them.
 
 ### 7. Flag missing project notes
 
-If any capture was tagged `#project/<slug>` and there is no corresponding note at `/projects/<slug>.md` or `/projects/<slug>/index.md`, report this to the user:
+If any capture was tagged `#project/<slug>` and there is no corresponding note at `/01 - Projects/<slug>.md` or `/01 - Projects/<slug>/index.md`, report this to the user:
 
 > ⚠️ **Missing project note:** Captures tagged `#project/<slug>` but no project note exists. Create one with `/create-project`?
 
@@ -153,10 +153,10 @@ After processing all captures, provide a brief summary:
 
 ## File naming
 
-- Daily note: `/daily/YYYY-MM-DD.md`
-- Project: `/projects/<slug>.md` or `/projects/<slug>/index.md`
-- Area: `/areas/<slug>.md`
-- Resource: `/resources/<slug>.md`
+- Daily note: `/00 - Daily/YYYY-MM-DD.md`
+- Project: `/01 - Projects/<slug>.md` or `/01 - Projects/<slug>/index.md`
+- Area: `/02 - Areas/<slug>.md`
+- Resource: `/03 - Resources/<slug>.md`
 - Index: `_projects.md`, `_areas.md`, `_resources.md` (vault root)
 - Tasks: `tasks.md` (vault root)
 

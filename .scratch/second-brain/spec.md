@@ -28,7 +28,7 @@ A VS Code + Foam-based second brain vault with three layers: (1) a frictionless 
 12. As a user, I want promoted notes to have OKF-compliant YAML frontmatter (`title`, `type`, `description`, `tags`, `relationships`, `timestamp`), so that AI agents can parse my vault.
 13. As a user, I want to search my vault via VS Code's full-text search and find any note, so that retrieval is fast.
 14. As a user, I want to browse the Foam graph to discover connections between notes, so that serendipitous discovery happens naturally.
-15. As a user, I want vault notes organized under `/daily/`, `/projects/`, `/areas/`, `/resources/`, and `/archive/`, so that the file tree is navigable.
+15. As a user, I want vault notes organized under `/00 - Daily/`, `/01 - Projects/`, `/02 - Areas/`, `/03 - Resources/`, and `/04 - Archive/`, so that the file tree is navigable.
 16. As a user, I want a `tasks.md` at vault root that aggregates all action items from across the vault, grouped by project, so that I have a single planning surface.
 17. As a user, I want the daily review skill to maintain a `## Tasks` section inside each project note, so that project-level task visibility is preserved.
 18. As a user, I want the `sb` CLI to be installable from a single command, so that setup is trivial.
@@ -40,7 +40,7 @@ A VS Code + Foam-based second brain vault with three layers: (1) a frictionless 
 24. As a user, I want a project to start as a single file and be upgradable to a folder when it accumulates artifacts, so that simple projects stay simple and complex ones can grow.
 25. As a user, I want a skill that promotes a single-file project to a folder structure, so that the upgrade path is clean.
 26. As a user, I want AI to suggest upgrading a project to a folder when enough promoted notes accumulate, so that organization scales naturally.
-27. As a user, I want a skill to archive a project that moves it to `/archive/`, so that completed work is separated from active projects.
+27. As a user, I want a skill to archive a project that moves it to `/04 - Archive/`, so that completed work is separated from active projects.
 28. As a user, I want the archive skill to review the project for content worth promoting to a resource note before archiving, so that valuable knowledge isn't lost.
 29. As a user, I want AI to suggest archiving projects with no recent activity, so that stale projects don't clutter active views.
 30. As a user, I want area notes to follow the same pattern as projects but without a goals section, and they are never archived, so that ongoing responsibilities have a permanent home.
@@ -58,7 +58,7 @@ A VS Code + Foam-based second brain vault with three layers: (1) a frictionless 
 
 ## Implementation Decisions
 
-- **Capture path**: `sb "thought"` delegates to `foam daily --create --path-only` for note creation, then appends `- [HH:MM] thought` to `/daily/YYYY-MM-DD.md` under `## Captures`.
+- **Capture path**: `sb "thought"` delegates to `foam daily --create --path-only` for note creation, then appends `- [HH:MM] thought` to `/00 - Daily/YYYY-MM-DD.md` under `## Captures`.
 - **CLI flags**: `--open` (opens daily note in $EDITOR), `--editor` (opens $EDITOR for multi-line), `--type meeting` (appends to ## Meetings), `--project x` (pre-tags `#project/x`), `--tag foo,bar` (custom tags), `--no-timestamp`, `--help`. Implemented as a bash script.
 - **Daily note template**: Frontmatter with `date: YYYY-MM-DD`. Sections: `## Today's Focus`, `## Captures`, `## Meetings`. Created on first capture of the day.
 - **Meeting notes**: Start in the daily note's `## Meetings` section. The daily review promotes substantive meetings to standalone files.
@@ -68,17 +68,17 @@ A VS Code + Foam-based second brain vault with three layers: (1) a frictionless 
 - **Task aggregation**: The daily review maintains `## Tasks` sections in project notes and a root `tasks.md` that aggregates all actions with `[[wikilinks]]` back to source notes. `tasks.md` format: checkboxes `- [ ]`, grouped by `## Project: Name`.
 - **Index notes**: `_projects.md`, `_areas.md`, `_resources.md`, `_archive.md` at vault root. Simple link lists with status badges. Updated at the end of each daily review; `_archive.md` is updated by the archive skill.
 - **Folder index.md**: When a note upgrades to a folder, `index.md` serves as the MOC for that folder, listing sub-notes. Maintained by the daily review.
-- **Vault structure**: `/daily/`, `/projects/`, `/areas/`, `/resources/`, `/archive/`, `tasks.md`, `_projects.md`, `_areas.md`, `_resources.md`, `_archive.md` (root). Assets in `/assets/`.
+- **Vault structure**: `/00 - Daily/`, `/01 - Projects/`, `/02 - Areas/`, `/03 - Resources/`, `/04 - Archive/`, `tasks.md`, `_projects.md`, `_areas.md`, `_resources.md`, `_archive.md` (root). Assets in `/assets/`.
 - **Frontmatter**: Promoted notes get OKF-compliant YAML frontmatter: `title`, `type`, `description`, `tags`, `relationships`, `timestamp`.
 - **Resource notes**: Created by the daily review (from URL captures) or manually via skill/template. AI determines sections based on source type (article, book, video, concept). Flat files by default, upgradeable to folders. AI suggests archiving outdated resources.
-- **Vault structure**: `/daily/`, `/projects/`, `/areas/`, `/resources/`, `/archive/`, `tasks.md` (root). Assets in `/assets/`.
+- **Vault structure**: `/00 - Daily/`, `/01 - Projects/`, `/02 - Areas/`, `/03 - Resources/`, `/04 - Archive/`, `tasks.md` (root). Assets in `/assets/`.
 - **Frontmatter**: Promoted notes get OKF-compliant YAML frontmatter: `title`, `type`, `description`, `tags`, `relationships`, `timestamp`.
-- **Foam config**: Daily notes at `/daily/YYYY-MM-DD.md`. Wikilinks enabled. Graph view configured to color by `type` frontmatter field.
+- **Foam config**: Daily notes at `/00 - Daily/YYYY-MM-DD.md`. Wikilinks enabled. Graph view configured to color by `type` frontmatter field.
 - **Project creation skill**: A skill at `.agents/skills/create-project/SKILL.md`. Supports wizard mode (ask which sections to include) and argument mode for non-interactive use. Available sections: overview, tasks, goals, open loops, decisions, related notes, stakeholders.
-- **Project note lifecycle**: Frontmatter has `status` (active/paused/completed/archived), `started`, `target`. Projects start as single files under `/projects/<slug>.md`. When promoted notes accumulate, AI or user invokes a promote-to-folder skill.
+- **Project note lifecycle**: Frontmatter has `status` (active/paused/completed/archived), `started`, `target`. Projects start as single files under `/01 - Projects/<slug>.md`. When promoted notes accumulate, AI or user invokes a promote-to-folder skill.
 - **Promote-to-folder skill**: A skill at `.agents/skills/promote-project/SKILL.md`. Converts a project file to `projects/<slug>/index.md`, moves associated notes into the folder using `foam note move` (which auto-rewrites all wikilinks).
-- **Archive skill**: A skill at `.agents/skills/archive-project/SKILL.md`. Moves project to `/archive/`. Before archiving, reviews project content and proposes resource note promotion for salvageable knowledge. AI suggests archiving for projects with prolonged inactivity.
-- **Area notes**: Same structure as projects but no goals section. Never archived. Under `/areas/`.
+- **Archive skill**: A skill at `.agents/skills/archive-project/SKILL.md`. Moves project to `/04 - Archive/`. Before archiving, reviews project content and proposes resource note promotion for salvageable knowledge. AI suggests archiving for projects with prolonged inactivity.
+- **Area notes**: Same structure as projects but no goals section. Never archived. Under `/02 - Areas/`.
 - **Git**: Local-only, no remote configured. No auto-commit or sync.
 
 ## Testing Decisions

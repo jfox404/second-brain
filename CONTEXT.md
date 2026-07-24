@@ -9,7 +9,7 @@ A single thought or piece of information saved to the system. Captures live in d
 _Avoid_: Note, snippet, bookmark
 
 **Daily note**:
-A markdown file at `/daily/YYYY-MM-DD.md` that serves as the default capture surface. Each capture is a timestamped bullet line.
+A markdown file at `/00 - Daily/YYYY-MM-DD.md` that serves as the default capture surface. Each capture is a timestamped bullet line.
 _Avoid_: Journal, log, inbox
 
 **Daily review**:
@@ -21,7 +21,7 @@ The mechanism that writes a thought to the daily note — a CLI command (`sb "..
 _Avoid_: Input method, capture tool
 
 **Archival**:
-Moving a completed/stale project to `/archive/`. The archive skill reviews the project for any content worth promoting to a resource note before moving it.
+Moving a completed/stale project to `/04 - Archive/`. The archive skill reviews the project for any content worth promoting to a resource note before moving it.
 _Avoid_: Deletion, cleanup
 
 **PARA**:
@@ -29,11 +29,11 @@ The four note types — **P**roject (time-bound outcome, can archive), **A**rea 
 _Avoid_: Folders as the source of truth (type is the frontmatter field; folders are for navigation)
 
 **Project note**:
-Markdown file or folder under `/projects/` representing a time-bound outcome. Can contain sections: overview, tasks, goals, open loops, decisions, related notes, stakeholders. AI selects which sections to include on creation.
+Markdown file or folder under `/01 - Projects/` representing a time-bound outcome. Can contain sections: overview, tasks, goals, open loops, decisions, related notes, stakeholders. AI selects which sections to include on creation.
 _Avoid_: Just "project"
 
 **Area note**:
-Markdown file or folder under `/areas/` representing an ongoing responsibility (health, career, finances, etc.). Same project structure but no goals section, and never archived.
+Markdown file or folder under `/02 - Areas/` representing an ongoing responsibility (health, career, finances, etc.). Same project structure but no goals section, and never archived.
 _Avoid_: Category, bucket
 
 **URL capture**:
