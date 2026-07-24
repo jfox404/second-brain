@@ -4,7 +4,7 @@ A personal knowledge system for turning scattered inputs into reusable thinking.
 
 ## Quick start
 
-1. **Install the `sb` CLI** — links to the script in this repo. Requires `foam-cli` globally (`npm install -g foam-cli`).
+1. **Install** — run `bin/install` (installs `foam-cli` and symlinks the `sb` CLI to `~/.local/bin/sb`).
 2. **Open this repo in VS Code** with the [Foam extension](https://foambubble.github.io/) installed
 3. **Capture** — run `sb "thought"` from the terminal or `Cmd+Shift+P > Foam: Open Today's Note` in VS Code
 4. **Review** — open Copilot agent mode and say "run the review skill"
@@ -38,7 +38,7 @@ Manage  → Create projects/areas, promote to folders, archive
 
 Top-level files:
 - `tasks.md` — aggregated action items across all projects
-- `_projects.md`, `_areas.md`, `_resources.md` — auto-maintained index notes
+- `_projects.md`, `_areas.md`, `_resources.md`, `_archive.md` — auto-maintained index notes
 
 ## Skills
 
