@@ -100,10 +100,24 @@ fi
 CAPTURE_LINE="- ${TIMESTAMP}${TEXT}${TAG_SUFFIX}"
 
 awk -v section="$SECTION" -v line="$CAPTURE_LINE" '
-$0 == section { in_section = 1; print; next }
-in_section && /^## / { print line; in_section = 0 }
-{ print }
-END { if (in_section) print line }
+$0 == section { in_section = 1; n = 0; print; next }
+in_section && /^## / {
+  while (n > 0 && buffer[n] ~ /^$/) n--
+  for (i = 1; i <= n; i++) print buffer[i]
+  if (n > 0) print line; else { print ""; print line }
+  print ""
+  in_section = 0
+  print; next
+}
+in_section { buffer[++n] = $0; next }
+1
+END {
+  if (in_section) {
+    while (n > 0 && buffer[n] ~ /^$/) n--
+    for (i = 1; i <= n; i++) print buffer[i]
+    if (n > 0) print line; else { print ""; print line }
+  }
+}
 ' "$NOTE_PATH" > "${NOTE_PATH}.tmp" && mv "${NOTE_PATH}.tmp" "$NOTE_PATH"
 
 echo "✓ Captured to $NOTE_PATH"
