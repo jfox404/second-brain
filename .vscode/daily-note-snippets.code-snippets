@@ -1,0 +1,41 @@
+{
+  "Daily Note Meeting Entry": {
+    "scope": "markdown",
+    "prefix": "dnote-meeting",
+    "body": [
+      "### **${1:Meeting title}** [[${2:Related Project/Area}]]",
+      "",
+      "**Attendees:**",
+      "- ${3:Attendee}",
+      "",
+      "**Notes:**",
+      "- ${4:Note 1}",
+      "",
+      "**Actions:**",
+      "- [ ] ${5:Action item (owner: ${6:Owner})} ${7:due: ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}}",
+      ""
+    ],
+    "description": "Insert a meeting entry block for daily notes with attendees, notes, and action items"
+  },
+  "Daily Note Working Session Entry": {
+    "scope": "markdown",
+    "prefix": "dnote-session",
+    "body": [
+      "### **${1:Session title}** [[${2:Related Project/Area}]]",
+      "",
+      "**Goal:**",
+      "${3:What you set out to accomplish}",
+      "",
+      "**Notes:**",
+      "- ",
+      "",
+      "**Outcome:**",
+      "${5:What was accomplished or decided}",
+      "",
+      "**Actions:**",
+      "- ",
+      ""
+    ],
+    "description": "Insert a working session entry block for daily notes with goal, notes, outcome, and action items"
+  }
+}

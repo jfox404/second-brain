@@ -1,5 +1,17 @@
 {
   "recommendations": [
-    "foam.foam-vscode"
+    "foam.foam-vscode",
+    "yzhang.markdown-all-in-one",
+    "esbenp.prettier-vscode",
+    "bierner.markdown-emoji",
+    "bierner.emojisense",
+    "MermaidChart.vscode-mermaid-chart",
+    "pomdtr.excalidraw-editor",
+    "vsls-contrib.gitdoc",
+    "jebbs.markdown-extended",
+    "Gruntfuggly.todo-tree",
+    "tomoki1207.pdf",
+    "formulahendry.code-runner",
+    "GitHub.copilot-chat"
   ]
 }
