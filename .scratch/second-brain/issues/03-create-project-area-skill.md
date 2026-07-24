@@ -1,10 +1,10 @@
 # 03 — Create project/area skill
 
-**What to build:** A skill file at `.agents/skills/create-project/SKILL.md` that the user invokes (or the review skill invokes) to create a new project or area note.
+**What to build:** A skill file at `.agents/skills/create-project/SKILL.md` that the user invokes (or the daily review skill invokes) to create a new project or area note.
 
 Supports two modes:
 - **Wizard mode** (no arguments): asks for name, type (project/area), file or folder, which sections to include (overview, tasks, goals, open loops, decisions, related notes, stakeholders — no goals for areas)
-- **Argument mode** (called by review skill or with CLI arguments): accepts the same fields as parameters
+- **Argument mode** (called by daily review skill or with CLI arguments): accepts the same fields as parameters
 
 Creates the note with YAML frontmatter: `title`, `type`, `status` (active), `started`, `target` (projects only), `tags`, `related`. Uses `foam note create --title "..." --dir projects --property type=project --property status=active` for note creation. Creates as single file or folder with `index.md`.
 

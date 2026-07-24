@@ -7,7 +7,7 @@ A personal knowledge system for turning scattered inputs into reusable thinking.
 1. **Install** — run `bin/install` (installs `foam-cli` and symlinks the `sb` CLI to `~/.local/bin/sb`).
 2. **Open this repo in VS Code** with the [Foam extension](https://foambubble.github.io/) installed
 3. **Capture** — run `sb "thought"` from the terminal or `Cmd+Shift+P > Foam: Open Today's Note` in VS Code
-4. **Review** — open Copilot agent mode and say "run the review skill"
+4. **Review** — open Copilot agent mode and say "run the daily review"
 5. **Organize** — invoke skills to create projects, promote to folders, or archive
 
 ## Workflow
@@ -16,7 +16,7 @@ A personal knowledge system for turning scattered inputs into reusable thinking.
 Capture → Daily note (CLI or Foam wikilink)
    │
    ▼
-Review  → AI enriches captures (tags, links, actions, URL synthesis)
+Review  → AI enriches today's captures (tags, links, actions, URL synthesis)
    │
    ▼
 Promote → AI extracts notable captures to permanent notes
@@ -46,7 +46,7 @@ Skills are markdown files that instruct AI agents. Invoke them from Copilot agen
 
 | Skill | Location | What it does |
 |---|---|---|
-| Review | `.agents/skills/review/` | Processes unprocessed daily note captures |
+| Daily review | `.agents/skills/daily-review/` | Processes unprocessed daily note captures |
 | Create project/area | `.agents/skills/create-project/` | Creates structured project or area notes |
 | Promote to folder | `.agents/skills/promote-project/` | Converts single file to folder structure |
 | Archive | `.agents/skills/archive-project/` | Archives projects with knowledge salvage |

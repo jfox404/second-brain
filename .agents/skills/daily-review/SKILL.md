@@ -1,11 +1,11 @@
 ---
-name: review
+name: daily-review
 description: Enrich today's daily note captures with tags, links, and actions; maintain tasks.md, project task sections, and index notes.
 disable-model-invocation: true
-argument-hint: "Run the review pass on today's daily note captures"
+argument-hint: "Run the daily review on today's daily note captures"
 ---
 
-# Review — Capture Enrichment
+# Daily Review
 
 See [shared patterns](../_shared/patterns.md) for index note conventions and OKF frontmatter.
 
@@ -138,7 +138,7 @@ If any capture was tagged `#project/<slug>` and there is no corresponding note a
 
 > ⚠️ **Missing project note:** Captures tagged `#project/<slug>` but no project note exists. Create one with `/create-project`?
 
-Collect all such flags and present them together at the end of the review.
+Collect all such flags and present them together at the end of the daily review.
 
 ### 8. Summary
 

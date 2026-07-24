@@ -12,9 +12,9 @@ _Avoid_: Note, snippet, bookmark
 A markdown file at `/daily/YYYY-MM-DD.md` that serves as the default capture surface. Each capture is a timestamped bullet line.
 _Avoid_: Journal, log, inbox
 
-**Review**:
-A manual AI-assisted pass over unprocessed captures. Enriches them in-place with tags, wikilinks, and action markers.
-_Avoid_: Processing, triaging, grooming
+**Daily review**:
+A manual AI-assisted pass over unprocessed captures in today's daily note. Enriches them in-place with tags, wikilinks, and action markers.
+_Avoid_: Processing, grooming
 
 **Capture trigger**:
 The mechanism that writes a thought to the daily note — a CLI command (`sb "..."`) or a VS Code Foam wikilink.
@@ -37,7 +37,7 @@ Markdown file or folder under `/areas/` representing an ongoing responsibility (
 _Avoid_: Category, bucket
 
 **URL capture**:
-A capture containing a URL. The review pass fetches the linked content and synthesizes it into a promoted resource note during review.
+A capture containing a URL. The daily review fetches the linked content and synthesizes it into a promoted resource note.
 _Avoid_: Link, bookmark
 
 **Action item**:
@@ -45,7 +45,7 @@ A capture tagged with `[action:]` that represents something to do. Lives in the 
 _Avoid_: Task, todo, to-do
 
 **Promotion**:
-When the review pass extracts a capture from a daily note into its own standalone file under the appropriate type folder. The AI decides when a capture is durable, complex, or novel enough to promote. For URL captures, the AI fetches the linked content and synthesizes the promoted note.
+When the daily review extracts a capture from a daily note into its own standalone file under the appropriate type folder. The AI decides when a capture is durable, complex, or novel enough to promote. For URL captures, the AI fetches the linked content and synthesizes the promoted note.
 _Avoid_: Extraction, filing
 
 **OKF frontmatter**:

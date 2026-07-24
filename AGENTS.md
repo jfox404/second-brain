@@ -23,7 +23,7 @@ A personal knowledge system for turning scattered inputs into reusable thinking.
 
 In a fresh session, the first thing the agent should do is read the relevant skill file from `.scratch/second-brain/spec.md` and the ticket from `.scratch/second-brain/issues/`. The following skills have been specced:
 
-- **Review skill** (`.agents/skills/review/SKILL.md`) — enriches daily note captures with tags, links, actions; maintains tasks.md, project task sections, and index notes
+- **Daily review skill** (`.agents/skills/daily-review/SKILL.md`) — enriches daily note captures with tags, links, actions; maintains tasks.md, project task sections, and index notes
 - **Create project/area skill** (`.agents/skills/create-project/SKILL.md`) — creates project or area notes with selected sections
 - **Promote to folder skill** (`.agents/skills/promote-project/SKILL.md`) — converts single file project to folder structure
 - **Archive skill** (`.agents/skills/archive-project/SKILL.md`) — archives projects with salvage review

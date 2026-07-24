@@ -1,6 +1,6 @@
 ---
 name: archive-project
-description: Archive a completed or stale project to /archive/. Use when the user wants to archive a project, or when the review skill suggests archiving a stale project with no recent captures for 30+ days.
+description: Archive a completed or stale project to /archive/. Use when the user wants to archive a project, or when the daily review skill suggests archiving a stale project with no recent captures for 30+ days.
 argument-hint: "path=<relative-path>"
 ---
 
@@ -15,7 +15,7 @@ Move a project from `/projects/` to `/archive/`, reviewing for salvageable conte
 Two modes:
 
 - **Direct invocation** — user provides the project path or slug to archive.
-- **Review suggestion** — the review skill detects a project with no recent captures (30+ days since last `[[wikilink]]` from a daily note) and suggests archiving. If the user agrees, the review pass delegates here.
+- **Review suggestion** — the daily review detects a project with no recent captures (30+ days since last `[[wikilink]]` from a daily note) and suggests archiving. If the user agrees, the daily review delegates here.
 
 Only projects (not areas or resources) can be archived. Area notes are never archived per the domain model.
 

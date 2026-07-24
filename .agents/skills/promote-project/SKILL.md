@@ -1,6 +1,6 @@
 ---
 name: promote-project
-description: Promote a single-file project, area, or resource note to a folder structure. Use when the user wants to upgrade a note to a folder, or when the review skill discovers accumulated sub-notes and suggests promoting.
+description: Promote a single-file project, area, or resource note to a folder structure. Use when the user wants to upgrade a note to a folder, or when the daily review skill discovers accumulated sub-notes and suggests promoting.
 argument-hint: "path=<relative-or-absolute-path>"
 ---
 
@@ -15,7 +15,7 @@ Convert a single-file note (`projects/<slug>.md`) to a folder (`projects/<slug>/
 This skill runs in two modes:
 
 - **Direct invocation** — user provides the path to a note to promote.
-- **Review suggestion** — the review skill detects a note with accumulated sub-notes (multiple `[[wikilinks]]` pointing into its slug directory that don't exist yet) and suggests promotion. If the user agrees, the review pass delegates here.
+- **Review suggestion** — the daily review detects a note with accumulated sub-notes (multiple `[[wikilinks]]` pointing into its slug directory that don't exist yet) and suggests promotion. If the user agrees, the daily review delegates here.
 
 ## Process
 

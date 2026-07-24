@@ -1,6 +1,6 @@
 ---
 name: create-project
-description: Create a project or area note with selected sections. Use when the user wants to create a new project, start a new area of responsibility, or when the review skill discovers a capture tagged with a new #project/x or #area/x tag that has no corresponding note and proposes creating one.
+description: Create a project or area note with selected sections. Use when the user wants to create a new project, start a new area of responsibility, or when the daily review skill discovers a capture tagged with a new #project/x or #area/x tag that has no corresponding note and proposes creating one.
 argument-hint: "name=<title> type=project|area format=file|folder sections=overview,tasks,goals,open-loops,decisions,related,stakeholders tags=tag1,tag2 related=Note Title"
 ---
 
@@ -43,7 +43,7 @@ When the user invokes the skill without providing arguments:
 8. Create the note (see Common creation steps below).
 9. Confirm the path and content.
 
-## Branch 2 — Argument mode (called by review skill or with params)
+## Branch 2 — Argument mode (called by daily review skill or with params)
 
 When arguments are passed or a calling skill provides the fields:
 
