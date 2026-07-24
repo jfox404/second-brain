@@ -1,13 +1,15 @@
 ---
 name: import
-description: Import a single legacy file into the primary vault with OKF frontmatter transformation
+description: Import single or bulk legacy files into the primary vault with OKF frontmatter transformation
 disable-model-invocation: true
-argument-hint: path=<path>
+argument-hint: path=<file-or-directory>
 ---
 
-# Import Skill — Single File Import with Wikilink Cascade
+# Import Skill — Single File & Bulk Directory Import with Wikilink Cascade, Tag Reconciliation, and Asset Copy
 
-Import a single legacy `.md` file into the primary vault. The agent reads the legacy file, proposes an OKF frontmatter mapping, gets user approval, determines the target PARA folder from the source path, and writes the transformed file. After import, the agent scans for `[[wikilinks]]` to notes not yet in the primary vault and offers to cascade-import each linked file from the legacy vault.
+Import legacy `.md` files into the primary vault. Accepts a single file or a directory path. For a single file, reads the legacy file, proposes an OKF frontmatter mapping, gets user approval, determines the target PARA folder from the source path, and writes the transformed file. For a directory, walks all `.md` files recursively, processes them sequentially with user approval per file, and preserves subdirectory structure under PARA folders.
+
+After each import, the agent scans for `[[wikilinks]]` to notes not yet in the primary vault and offers to cascade-import each linked file from the legacy vault.
 
 See [shared patterns](../_shared/patterns.md) for OKF frontmatter conventions.
 
@@ -17,15 +19,106 @@ See [shared patterns](../_shared/patterns.md) for OKF frontmatter conventions.
 --path /path/to/legacy/vault/01 - Projects/My Note.md
 ```
 
+```
+--path /path/to/legacy/vault/01 - Projects/
+```
+
 ## Step 1 — Validate the path argument
 
-Check that `--path` is provided, the file exists, is a regular file, and ends with `.md`. If any check fails, report the error and stop.
+Check that `--path` is provided and the path exists. If not, report the error and stop.
 
-If the path is valid, resolve it to an absolute path. Store as `LEGACY_FILE_PATH`.
+Resolve the path to an absolute path.
+
+**Check if path is a file or directory:**
+- If it's a regular file ending with `.md`, proceed to **Step 2 (Single-file import flow)** below.
+- If it's a directory, proceed to **Bulk Directory Import** (Section B below).
+- If it's a regular file but not `.md`, report: "The specified file is not a `.md` file. Only markdown files can be imported." and stop.
+- If it's something else (symlink, etc.), report the error and stop.
+
+Store the resolved path as `LEGACY_PATH`.
+
+---
+
+# Section B — Bulk Directory Import
+
+Use this flow when `LEGACY_PATH` is a directory. After bulk import completes, the session ends — there is no return to the single-file flow.
+
+## Step B1 — Walk the directory for files
+
+Walk `LEGACY_PATH` recursively for all files. Separate them into:
+
+- **Markdown files**: All files ending with `.md` under `LEGACY_PATH` (recursive). Store as `MD_FILES`.
+- **Non-markdown files**: All other files (images, PDFs, etc.). Store as `NON_MD_FILES`.
+
+Report the counts to the user:
+
+> Found `<N>` markdown files and `<M>` non-markdown files in `<LEGACY_PATH>`.
+
+## Step B2 — Offer to import non-markdown files
+
+List the non-markdown files to the user:
+
+> **Non-markdown files found:**
+> - `<file1>` (e.g., `assets/foo.png`)
+> - `<file2>` (e.g., `docs/schema.pdf`)
+
+For each non-markdown file, ask: "Import this file? It will be copied as-is to the corresponding path in the primary vault." (yes / skip). 
+- If yes, copy the file to the primary vault at the path relative to `LEGACY_VAULT_ROOT` (same subdirectory structure, as resolved in Step 6 for markdown files).
+- If no, skip it and move to the next.
+
+Collect skipped non-markdown files for the final summary.
+
+## Step B3 — Determine legacy vault root
+
+Determine the legacy vault root from `LEGACY_PATH`:
+
+Walk up from `LEGACY_PATH` looking for a directory that contains a `01 - Projects` folder. The first ancestor that has PARA folders is the legacy vault root.
+
+If no vault root can be detected (no PARA folders found up to filesystem root), use `LEGACY_PATH` itself as the vault root.
+
+Store as `LEGACY_VAULT_ROOT`.
+
+## Step B4 — Process markdown files sequentially with approval
+
+For each file in `MD_FILES` (process in sorted order for determinism):
+
+1. Show the user the path relative to `LEGACY_VAULT_ROOT` (this matches the target path in Step 6):
+   > **File `<N>` of `<TOTAL>`: `<relative_path>`**
+   > Source: `<full_path>`
+
+2. Ask: "Import this file?" (yes / skip)
+   - If "skip", record it as skipped and move to the next file.
+   - If "yes", run the **Single-file import flow** (Steps 2 through 11) on this file, with one modification to Step 6: use `LEGACY_VAULT_ROOT` as the vault root (it was already determined in Step B3).
+
+3. After each file is imported, run **Wikilink Cascade** (Steps 12-16) on the imported file, offering to cascade-import any orphan wikilinks.
+
+4. Record the outcome (imported / skipped / error) for the final summary.
+
+## Step B5 — Report bulk import summary
+
+After all files have been processed, present a summary:
+
+> **Bulk import complete.**
+> - Directory: `<LEGACY_PATH>`
+> - Total markdown files found: `<N>`
+> - Imported: `<count>`
+> - Skipped: `<count>`
+> - Errors: `<count>`
+> - Non-markdown files imported: `<count>`
+> - Non-markdown files skipped: `<count>`
+
+If there were any errors, list each one:
+
+> Errors:
+> - `<file>`: `<error description>`
+
+---
+
+**To continue below:** After Section B completes, the session is done. The steps below (Steps 2 through 16) describe the single-file import and wikilink cascade flows, which are invoked per file during the bulk directory walk.
 
 ## Step 2 — Read the legacy file
 
-Read `LEGACY_FILE_PATH`. Store the full content.
+Read the file at the current legacy path. Store the full content.
 
 ## Step 3 — Parse legacy frontmatter
 
@@ -60,7 +153,7 @@ Build a proposed OKF frontmatter:
 title: <from legacy title>
 type: <from legacy type>
 description: <1-2 sentence summary — propose a draft>
-tags: <from legacy tags>
+tags: <from legacy tags, after tag reconciliation>
 relationships: <see below>
 timestamp: <current ISO datetime or convert created to ISO>
 ---
@@ -74,6 +167,8 @@ timestamp: <current ISO datetime or convert created to ISO>
 **Timestamp conversion:**
 - If `created` exists (e.g., `2024-01-15`), convert to ISO datetime: `2024-01-15T00:00:00+00:00`.
 - If `created` is absent, use the current datetime in ISO format.
+
+**Tag reconciliation:** Before including legacy tags in the proposed mapping, reconcile each tag against the vault glossary per the [Tag Reconciliation](#tag-reconciliation) flow below.
 
 Present the proposed mapping to the user in a clear before/after format:
 
@@ -102,13 +197,15 @@ Ask the user:
 
 Resolve the target path by computing the relative path from the legacy vault root, then mapping it into the primary vault.
 
-**Determine legacy vault root:**
-Walk up from `LEGACY_FILE_PATH` looking for a directory that contains a `01 - Projects` folder. The first ancestor that has PARA folders is the legacy vault root.
+**Determine legacy vault root (if not already set by bulk import):**
+Walk up from the current file path looking for a directory that contains a `01 - Projects` folder. The first ancestor that has PARA folders is the legacy vault root.
 
-If no vault root can be detected (no PARA folders found), use the directory containing `LEGACY_FILE_PATH` as the vault root.
+If no vault root can be detected (no PARA folders found), use the directory containing the current file as the vault root.
+
+During bulk import, `LEGACY_VAULT_ROOT` was already determined in Step B3 — use that value directly (skip re-detection).
 
 **Compute relative path:**
-`RELATIVE_PATH` = path of `LEGACY_FILE_PATH` relative to legacy vault root.
+`RELATIVE_PATH` = path of current file relative to legacy vault root.
 
 **Compute target path:**
 `TARGET_PATH` = `<primary-vault-root>/<RELATIVE_PATH>`
@@ -142,21 +239,15 @@ Build the output markdown content:
 
 ```markdown
 ---
-<approved OKF frontmatter>
+<approved OKF frontmatter — source field removed from frontmatter>
 ---
 
 <original body content (the part after frontmatter)>
 ```
 
-If the legacy frontmatter had a `source` field with wikilinks, append a `## Sources` section at the end of the body:
+**Source field transformation:** Apply the [Source Field Transformation](#source-field-transformation) flow to convert `source` to a Sources section in the body and remove it from frontmatter.
 
-```markdown
-## Sources
-
-- [[Referenced Note]]
-```
-
-(The `source` field is also preserved in `relationships.source` in frontmatter per Step 5.)
+**Asset detection:** Scan the body content for asset references (`![alt](path/to/asset)` or `[link](path/to/asset)` pointing to files under an `assets/` directory). These will be processed in the [Asset Copying](#asset-copying) step.
 
 **Do not modify** the original legacy file at any point.
 
@@ -164,12 +255,16 @@ If the legacy frontmatter had a `source` field with wikilinks, append a `## Sour
 
 Write the transformed content to `TARGET_PATH`.
 
-## Step 10 — Confirm
+## Step 10 — Asset copying
+
+If the body content referenced any assets (detected in Step 8), process each one per the [Asset Copying](#asset-copying) flow below.
+
+## Step 11 — Confirm
 
 Report success to the user:
 
 > **Import complete.**
-> - Source: `<LEGACY_FILE_PATH>`
+> - Source: `<current file path>`
 > - Destination: `<TARGET_PATH>`
 > - Frontmatter fields mapped: `<list of fields>`
 
@@ -179,7 +274,7 @@ Report success to the user:
 
 After the file is imported, scan its body for `[[wikilinks]]` to notes not present in the primary vault. For each orphan link, offer to import the source file from the legacy vault. User approves or skips per linked file. Cascade-imported files go through the same frontmatter transformation flow as the parent import.
 
-## Step 11 — Scan imported content for wikilinks
+## Step 12 — Scan imported content for wikilinks
 
 Read the content of `TARGET_PATH` and extract all `[[wikilink targets]]`:
 
@@ -192,7 +287,7 @@ Read the content of `TARGET_PATH` and extract all `[[wikilink targets]]`:
 - `[[Build a Second Brain]]` → target: `Build a Second Brain`
 - `[[Foo Project|Foo]]` → target: `Foo Project` (display text `Foo` is ignored for resolution)
 
-## Step 12 — Check each wikilink against the primary vault
+## Step 13 — Check each wikilink against the primary vault
 
 For each target in `WIKILINKS`:
 
@@ -215,7 +310,7 @@ If `ORPHAN_WIKILINKS` is empty:
 - Report: "All wikilinks in the imported file resolve to existing notes."
 - Proceed to completion.
 
-## Step 13 — Present orphan wikilinks for user review
+## Step 14 — Present orphan wikilinks for user review
 
 Present the list of orphan wikilinks to the user:
 
@@ -231,7 +326,7 @@ Ask: "Proceed with cascade import?" (yes / skip all / pick individually)
 - If "yes", iterate over each orphan link (in any order).
 - If "pick individually", ask the user to select which targets to process, then iterate over the selected subset.
 
-## Step 14 — Cascade-import each orphan wikilink
+## Step 15 — Cascade-import each orphan wikilink
 
 For each orphan target to process:
 
@@ -253,7 +348,7 @@ If multiple files are found:
 - Report all candidates.
 - Ask: "Which one to import? (enter number, or 'skip')"
 
-**If approved**, run the **same frontmatter transformation flow** (Steps 2 through 10) on the found legacy file:
+**If approved**, run the **same frontmatter transformation flow** (Steps 2 through 11) on the found legacy file:
 - Step 2 — Read the legacy file
 - Step 3 — Parse legacy frontmatter
 - Step 4 — Derive missing fields
@@ -262,11 +357,12 @@ If multiple files are found:
 - Step 7 — Check target directory
 - Step 8 — Build transformed file
 - Step 9 — Write transformed file
-- Step 10 — Confirm (for this cascade file)
+- Step 10 — Asset copying
+- Step 11 — Confirm (for this cascade file)
 
-**Recursive cascade:** After each cascade-import completes, that file may also contain wikilinks to notes not in the primary vault. Ask the user: "The cascade-imported file also contains orphan wikilinks. Cascade further?" (yes / no). If yes, recursively run Steps 11-14 on the cascade-imported file. Track depth to avoid cycles — maintain a set of already-imported files and skip any file that has already been imported in this session.
+**Recursive cascade:** After each cascade-import completes, that file may also contain wikilinks to notes not in the primary vault. Ask the user: "The cascade-imported file also contains orphan wikilinks. Cascade further?" (yes / no). If yes, recursively run Steps 12-15 on the cascade-imported file. Track depth to avoid cycles — maintain a set of already-imported files and skip any file that has already been imported in this session.
 
-## Step 15 — Final verification
+## Step 16 — Final verification
 
 After all cascade imports are complete:
 
@@ -285,9 +381,56 @@ If any wikilinks remain unresolved, note them to the user for manual handling.
 
 ## Edge cases
 
+### Tag Reconciliation
+
+When a legacy tag doesn't match the vault glossary in `CONTEXT.md`, follow this flow during Step 5:
+
+1. **Detect tags:** Collect all tags from legacy frontmatter. Legacy tags may be a YAML list, a comma-separated string, or a single string — normalize to a list of individual tag strings before proceeding.
+2. **Check against glossary:** Read `CONTEXT.md` at the repo root. Look for a glossary section (typically a list of terms with definitions). For each legacy tag, check if it matches a glossary term (case-insensitive) or is commonly understood.
+3. **Identify conflicts:** If a tag doesn't match any glossary term, flag it as a conflict.
+4. **Present to user:**
+   > Tag conflict: `<legacy_tag>` is not in the vault glossary.
+   > Options: (r)ename to a glossary term, (k)eep as-is, (s)kip this tag
+5. **Handle user choice:**
+   - **Rename:** Ask the user which glossary term to use. Replace the tag in the OKF frontmatter.
+   - **Keep:** Include the tag as-is in the OKF frontmatter.
+   - **Skip:** Remove the tag from the OKF frontmatter entirely.
+6. **Proceed** with the reconciled tags in the proposed OKF mapping.
+
+### Source Field Transformation
+
+When the legacy frontmatter includes a `source` field:
+
+1. **Parse source content:**
+   - If a string, treat as a single source.
+   - If a list, treat as multiple sources.
+2. **Detect source type:** For each source entry, determine if it's a wikilink (`[[Note Title]]`), a plain URL (`https://...`), or plain text.
+3. **Transform:**
+   - **Wikilinks:** Add to `relationships.source` in frontmatter AND append to a `## Sources` section at the end of the body.
+   - **URLs:** Add to `relationships.source` in frontmatter AND append as a markdown link in the Sources section.
+   - **Plain text:** Add to `relationships.source` in frontmatter AND append as-is in the Sources section.
+4. **Remove `source` from frontmatter:** The `source` field is NOT carried over into the OKF frontmatter (it has been transformed into `relationships.source` and the body Sources section).
+
+### Asset Copying
+
+When an imported file references assets (detected during Step 8):
+
+1. **Detect asset references:** Scan the body content for:
+   - Image embeds: `![alt](path/to/asset)`
+   - File links: `[label](path/to/asset)`
+   - Focus on references under an `assets/` directory.
+2. **Check each asset:** For each detected reference:
+   - Look for the asset file in the legacy vaults `assets/` folder (relative to legacy vault root).
+   - Check if the asset already exists in the primary vaults `assets/` folder.
+3. **Copy if needed:** If the asset exists in the legacy vault and not in the primary vault, ask the user for approval before copying.
+4. **Missing assets:** If an asset reference points to a file that doesn't exist in the legacy vault, warn the user but don't block the import.
+5. **Path verification:** After copying, verify the asset file exists at the target path and confirm to the user.
+
+### General Edge Cases
+
 - **No frontmatter**: Derive `title` from filename, ask for `type`, use minimal OKF mapping.
 - **Unknown legacy fields**: Carry them over into OKF frontmatter as-is (within OKF conventions) and note them to the user.
-- **Multiple tags formats**: Legacy tags may be `[tag1, tag2]` or `[tag1, tag2]` (list) or `tag1, tag2` (comma-separated string). Normalize to YAML list format.
+- **Multiple tags formats**: Legacy tags may be `[tag1, tag2]` (list) or `tag1, tag2` (comma-separated string). Normalize to YAML list format.
 - **Non-PARA path**: If the file is not under a PARA folder, ask the user which PARA folder it should go into and derive the target path accordingly.
 - **Date formats other than YYYY-MM-DD**: Convert to ISO datetime if possible; if format is unrecognizable, use the current datetime and note it to the user.
 - **Circular cascade**: If two notes wikilink to each other and neither is in the primary vault, importing one triggers an offer to import the other. The already-imported set prevents re-importing the same file twice.
@@ -300,12 +443,25 @@ If any wikilinks remain unresolved, note them to the user for manual handling.
 - Legacy file path validated and exists
 - Legacy frontmatter parsed and all missing fields handled
 - OKF mapping proposed to user and approved (possibly modified)
+- Tags reconciled against vault glossary (user decides per conflict)
 - Target PARA path determined from source path
 - Target directory created if missing (user approved)
 - File collision handled if present
+- Source field transformed to `relationships.source` + body Sources section
+- Referenced assets detected, offered for copy, and copied if approved
 - Transformed file written with valid OKF frontmatter (`title`, `type`, `description`, `tags`, `relationships`, `timestamp`)
 - Original legacy file untouched
 - Success reported with written path
+
+### Bulk directory import
+- Agent accepts directory path and walks it recursively for all files
+- Non-markdown files listed and offered for import individually
+- Legacy vault root determined from directory path
+- Markdown files processed sequentially with user approval per file
+- Subdirectory structure under PARA folders preserved in the primary vault
+- User can skip individual files
+- Wikilink cascade runs per imported file during the walk
+- Bulk summary reported (N imported, M skipped, any errors)
 
 ### Wikilink cascade
 - Wikilinks detected in imported file pointing to notes not in primary vault
@@ -315,3 +471,11 @@ If any wikilinks remain unresolved, note them to the user for manual handling.
 - Recursive cascade offered when cascade-imported files also contain orphan links
 - Cycle prevention via already-imported set
 - After cascade, all wikilinks in original file verified and unresolved ones reported
+
+### Edge cases
+- Tag conflicts detected, presented with rename/keep/skip options
+- Renamed tag written to OKF frontmatter with glossary term
+- Source field converted to `relationships.source` + body Sources section
+- Source field removed from OKF frontmatter after transformation
+- Referenced assets detected, copied with approval, and paths verified
+- Missing assets reported as warnings (don't fail the import)
