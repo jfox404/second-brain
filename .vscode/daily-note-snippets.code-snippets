@@ -37,5 +37,13 @@
       ""
     ],
     "description": "Insert a working session entry block for daily notes with goal, notes, outcome, and action items"
+  },
+  "Daily Note Capture Entry": {
+    "scope": "markdown",
+    "prefix": "dnote-capture",
+    "body": [
+      "[$CURRENT_HOUR:$CURRENT_MINUTE] ${1:Captured item} [[${2:Related Project/Area}]] ${3:tags: #tag1 #tag2}"
+    ],
+    "description": "Insert a capture entry for daily notes with related project/area and tags"
   }
 }
