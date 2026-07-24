@@ -10,7 +10,7 @@ _Avoid_: Note, snippet, bookmark
 
 **Daily note**:
 A markdown file at `/00 - Inbox/Daily Note - YYYY-MM-DD.md` that serves as the default capture surface. Each capture is a timestamped bullet line.
-_Avoid_: Journal, log, inbox
+_Avoid_: Journal, log
 
 **Daily review**:
 A manual AI-assisted pass over unprocessed captures in today's daily note. Enriches them in-place with tags, wikilinks, and action markers.
@@ -20,8 +20,20 @@ _Avoid_: Processing, grooming
 The mechanism that writes a thought to the daily note — a CLI command (`sb "..."`) or a VS Code Foam wikilink.
 _Avoid_: Input method, capture tool
 
+**Inbox**:
+The `/00 - Inbox/` folder — a unified staging area for both daily notes and raw artifacts. Sits before the PARA system in the workflow. Content enters here, gets processed (daily review or inbox review), then graduates to its PARA home or archive.
+_Avoid_: Dump, backlog
+
+**Inbox artifact**:
+A file in `/00 - Inbox/` that is not a daily note. A meeting transcript, PDF notes, a long-form reference doc — too large for a single capture bullet. Processed via inbox review, which extracts signal into the appropriate PARA note and archives the original.
+_Avoid_: Attachment, document, blob
+
+**Inbox review**:
+The process of examining an inbox artifact, extracting its signal into the appropriate PARA note, and archiving the original. Uses a proposal sub-agent to draft the destination and content, then presents it to the user for approval before executing. One artifact at a time.
+_Avoid_: Bulk processing, filing
+
 **Archival**:
-Moving a completed/stale project to `/04 - Archive/`. The archive skill reviews the project for any content worth promoting to a resource note before moving it.
+Moving a completed/stale project to `/04 - Archive/`, or moving a processed inbox item out of `/00 - Inbox/`. The archive skill reviews projects for salvageable content before moving. Inbox artifacts archive flat to `/04 - Archive/` root; processed daily notes go to `/04 - Archive/daily/`.
 _Avoid_: Deletion, cleanup
 
 **PARA**:
