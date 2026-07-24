@@ -10,8 +10,8 @@ type: daily
 ---
 # Daily Note - $FOAM_DATE_YEAR-$FOAM_DATE_MONTH-$FOAM_DATE_DATE
 
-## Today's Focus
+## 🔥 Today's Focus
 
-## Captures
+## 📓 Captures
 
-## Meetings
+## 🗣 Meetings
