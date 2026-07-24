@@ -10,7 +10,6 @@ Capture a thought to today's daily note.
 Options:
   --open              Open today's note in \$EDITOR (default: vi)
   --editor            Open \$EDITOR for multi-line capture
-  --type meeting      Add to ## Meetings section instead of ## Captures
   --project <slug>    Pre-tag with #project/<slug>
   --tag foo,bar       Add custom tags (comma-separated, no # prefix)
   --no-timestamp      Omit [HH:MM] timestamp prefix
@@ -18,7 +17,6 @@ Options:
 
 Examples:
   sb "had a great idea about X"
-  sb --type meeting "sprint review notes"
   sb --project second-brain "refactor the archive skill"
   sb --tag urgent,ideas "need to rethink the approach"
   sb --open
@@ -29,7 +27,6 @@ USAGE
 
 OPEN=false
 EDITOR_MODE=false
-SECTION="## Captures"
 PROJECT_SLUG=""
 CUSTOM_TAGS=""
 NO_TIMESTAMP=false
@@ -39,12 +36,6 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --open) OPEN=true; shift ;;
     --editor) EDITOR_MODE=true; shift ;;
-    --type)
-      if [[ "${2:-}" == "meeting" ]]; then
-        SECTION="## Meetings"
-      fi
-      shift 2
-      ;;
     --project) PROJECT_SLUG="${2:-}"; shift 2 ;;
     --tag) CUSTOM_TAGS="${2:-}"; shift 2 ;;
     --no-timestamp) NO_TIMESTAMP=true; shift ;;
@@ -101,10 +92,10 @@ fi
 
 CAPTURE_LINE="- ${TIMESTAMP}${TEXT}${TAG_SUFFIX}"
 
-awk -v section="$SECTION" -v line="$CAPTURE_LINE" '
+awk -v line="$CAPTURE_LINE" '
 {
   print
-  if ($0 == section) {
+  if ($0 == "## Captures") {
     print line
   }
 }

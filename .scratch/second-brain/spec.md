@@ -51,7 +51,7 @@ A VS Code + Foam-based second brain vault with three layers: (1) a frictionless 
 35. As a user, I want daily notes to have YAML frontmatter with `date`, so that the date is machine-readable.
 36. As a user, I want daily notes to have sections: `## Today's Focus`, `## Captures`, and `## Meetings`, so that the note has structure without being rigid.
 37. As a user, I want meeting notes to start as content in the daily note's `## Meetings` section and be promoted to standalone files by the daily review if substantive, so that capture stays fast.
-38. As a user, I want the `sb` CLI to support flags: `--open` (open daily note), `--editor` (multi-line input), `--type meeting` (adds to ## Meetings), `--project x` (pre-tags), `--tag foo,bar` (custom tags), `--no-timestamp`, so that the CLI covers common scenarios.
+38. As a user, I want the `sb` CLI to support flags: `--open` (open daily note), `--editor` (multi-line input), `--project x` (pre-tags), `--tag foo,bar` (custom tags), `--no-timestamp`, so that the CLI covers common scenarios.
 39. As a user, I want `tasks.md` to use markdown checkboxes (`- [ ]`), `[[wikilinks]]` back to source notes, and be grouped by project heading, so that I can track and navigate tasks.
 40. As a user, I want auto-generated index notes (`_projects.md`, `_areas.md`, `_resources.md`, `_archive.md`) listing all notes of each type with status, updated during review/archive passes, so that I have navigable overviews.
 41. As a user, I want when a note upgrades to a folder, its `index.md` to serve as that folder's MOC listing sub-notes, so that folder-level navigation is automatic.
@@ -59,7 +59,7 @@ A VS Code + Foam-based second brain vault with three layers: (1) a frictionless 
 ## Implementation Decisions
 
 - **Capture path**: `sb "thought"` delegates to `foam daily --create --path-only` for note creation, then appends `- [HH:MM] thought` to `/00 - Daily/YYYY-MM-DD.md` under `## Captures`.
-- **CLI flags**: `--open` (opens daily note in $EDITOR), `--editor` (opens $EDITOR for multi-line), `--type meeting` (appends to ## Meetings), `--project x` (pre-tags `#project/x`), `--tag foo,bar` (custom tags), `--no-timestamp`, `--help`. Implemented as a bash script.
+- **CLI flags**: `--open` (opens daily note in $EDITOR), `--editor` (opens $EDITOR for multi-line), `--project x` (pre-tags `#project/x`), `--tag foo,bar` (custom tags), `--no-timestamp`, `--help`. Implemented as a bash script.
 - **Daily note template**: Frontmatter with `date: YYYY-MM-DD`. Sections: `## Today's Focus`, `## Captures`, `## Meetings`. Created on first capture of the day.
 - **Meeting notes**: Start in the daily note's `## Meetings` section. The daily review promotes substantive meetings to standalone files.
 - **Review marker**: Processed captures get a `✅` prefix: `- ✅ [HH:MM] thought`. The daily review only processes captures without the marker.
