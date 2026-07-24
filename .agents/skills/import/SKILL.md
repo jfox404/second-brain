@@ -5,9 +5,9 @@ disable-model-invocation: true
 argument-hint: path=<path>
 ---
 
-# Import Skill — Single File Import
+# Import Skill — Single File Import with Wikilink Cascade
 
-Import a single legacy `.md` file into the primary vault. The agent reads the legacy file, proposes an OKF frontmatter mapping, gets user approval, determines the target PARA folder from the source path, and writes the transformed file.
+Import a single legacy `.md` file into the primary vault. The agent reads the legacy file, proposes an OKF frontmatter mapping, gets user approval, determines the target PARA folder from the source path, and writes the transformed file. After import, the agent scans for `[[wikilinks]]` to notes not yet in the primary vault and offers to cascade-import each linked file from the legacy vault.
 
 See [shared patterns](../_shared/patterns.md) for OKF frontmatter conventions.
 
@@ -173,6 +173,116 @@ Report success to the user:
 > - Destination: `<TARGET_PATH>`
 > - Frontmatter fields mapped: `<list of fields>`
 
+---
+
+## Wikilink Cascade
+
+After the file is imported, scan its body for `[[wikilinks]]` to notes not present in the primary vault. For each orphan link, offer to import the source file from the legacy vault. User approves or skips per linked file. Cascade-imported files go through the same frontmatter transformation flow as the parent import.
+
+## Step 11 — Scan imported content for wikilinks
+
+Read the content of `TARGET_PATH` and extract all `[[wikilink targets]]`:
+
+- Use a regex pattern: `\[\[([^\]]+?)(?:\|([^\]]+))?\]\]` to capture the link target and optional display text.
+- For each match, extract the **link target** (the part before `|`, or the whole inner text if no pipe).
+- Normalize targets by stripping leading/trailing whitespace.
+- Collect a **unique set** of wikilink targets. Store as `WIKILINKS`.
+
+**Example extraction:**
+- `[[Build a Second Brain]]` → target: `Build a Second Brain`
+- `[[Foo Project|Foo]]` → target: `Foo Project` (display text `Foo` is ignored for resolution)
+
+## Step 12 — Check each wikilink against the primary vault
+
+For each target in `WIKILINKS`:
+
+1. Determine the expected filename. Convert the target to a slug (lowercase, spaces to hyphens, strip non-alphanumeric except hyphens, collapse repeated hyphens) and search for these file patterns in the primary vault:
+   - `<slug>.md` in any PARA folder
+   - `<slug>/index.md` in any PARA folder
+2. Also search for a file whose frontmatter `title` field matches the target exactly (case-insensitive).
+
+Use `find` or glob to search the primary vault root (`/home/jon/projects/second-brain`):
+
+```bash
+find /home/jon/projects/second-brain -name "<slug>.md" -o -name "<slug>/index.md" 2>/dev/null
+```
+
+A simpler alternative: check if the file `<target>.md` exists in any of the PARA directories (`/01 - Projects/`, `/02 - Areas/`, `/03 - Resources/`, `/04 - Archive/`).
+
+Collect the set of targets not found in the primary vault as `ORPHAN_WIKILINKS`.
+
+If `ORPHAN_WIKILINKS` is empty:
+- Report: "All wikilinks in the imported file resolve to existing notes."
+- Proceed to completion.
+
+## Step 13 — Present orphan wikilinks for user review
+
+Present the list of orphan wikilinks to the user:
+
+> **Orphan wikilinks found** in the imported file (notes not in primary vault):
+> - [[Target One]]
+> - [[Target Two]]
+>
+> Import cascade: for each orphan link, I can try to find the source file in the legacy vault and import it using the same frontmatter transformation.
+
+Ask: "Proceed with cascade import?" (yes / skip all / pick individually)
+
+- If "skip all", report the unresolved wikilinks to the user and proceed to completion.
+- If "yes", iterate over each orphan link (in any order).
+- If "pick individually", ask the user to select which targets to process, then iterate over the selected subset.
+
+## Step 14 — Cascade-import each orphan wikilink
+
+For each orphan target to process:
+
+**Find the legacy source file:**
+Search the legacy vault root for a file matching the target:
+- Search for `<target>.md` recursively under the legacy vault root.
+- Also try slug variations (lowercase, hyphens).
+
+If no file is found:
+- Report: "Could not find a legacy source file for [[Target]] in `<legacy-vault-root>`."
+- Ask: "Provide the path manually, or skip?" (provide path / skip)
+- If "skip", move to the next orphan target.
+
+If one file is found:
+- Report: "Found candidate: `<path>`"
+- Ask: "Import this file?" (yes / skip)
+
+If multiple files are found:
+- Report all candidates.
+- Ask: "Which one to import? (enter number, or 'skip')"
+
+**If approved**, run the **same frontmatter transformation flow** (Steps 2 through 10) on the found legacy file:
+- Step 2 — Read the legacy file
+- Step 3 — Parse legacy frontmatter
+- Step 4 — Derive missing fields
+- Step 5 — Propose OKF mapping
+- Step 6 — Determine target PARA path
+- Step 7 — Check target directory
+- Step 8 — Build transformed file
+- Step 9 — Write transformed file
+- Step 10 — Confirm (for this cascade file)
+
+**Recursive cascade:** After each cascade-import completes, that file may also contain wikilinks to notes not in the primary vault. Ask the user: "The cascade-imported file also contains orphan wikilinks. Cascade further?" (yes / no). If yes, recursively run Steps 11-14 on the cascade-imported file. Track depth to avoid cycles — maintain a set of already-imported files and skip any file that has already been imported in this session.
+
+## Step 15 — Final verification
+
+After all cascade imports are complete:
+
+1. Re-read the original imported file at `TARGET_PATH`.
+2. Check that every `[[wikilink]]` in the file now resolves to a note in the primary vault.
+3. Report:
+
+> **Cascade import complete.**
+> - Originally imported: `<TARGET_PATH>`
+> - Orphan wikilinks found: `<count>`
+> - Cascade-imported files: `<list of files>`
+> - Skipped: `<list of skipped targets>`
+> - Unresolved wikilinks: `<list of unresolved targets>`
+
+If any wikilinks remain unresolved, note them to the user for manual handling.
+
 ## Edge cases
 
 - **No frontmatter**: Derive `title` from filename, ask for `type`, use minimal OKF mapping.
@@ -180,9 +290,13 @@ Report success to the user:
 - **Multiple tags formats**: Legacy tags may be `[tag1, tag2]` or `[tag1, tag2]` (list) or `tag1, tag2` (comma-separated string). Normalize to YAML list format.
 - **Non-PARA path**: If the file is not under a PARA folder, ask the user which PARA folder it should go into and derive the target path accordingly.
 - **Date formats other than YYYY-MM-DD**: Convert to ISO datetime if possible; if format is unrecognizable, use the current datetime and note it to the user.
+- **Circular cascade**: If two notes wikilink to each other and neither is in the primary vault, importing one triggers an offer to import the other. The already-imported set prevents re-importing the same file twice.
+- **Self-referencing wikilinks**: A file that wikilinks to itself should be ignored during cascade (the file already exists in the primary vault — it was just imported).
+- **Wikilinks to non-note targets**: Some wikilinks may reference headings (`[[Note#Section]]`) or blocks (`[[Note^block-id]]`). Resolve the base target (`Note`) for cascade purposes; the anchor is resolved naturally once the note exists.
 
 ## Completion criteria
 
+### Single-file import
 - Legacy file path validated and exists
 - Legacy frontmatter parsed and all missing fields handled
 - OKF mapping proposed to user and approved (possibly modified)
@@ -192,3 +306,12 @@ Report success to the user:
 - Transformed file written with valid OKF frontmatter (`title`, `type`, `description`, `tags`, `relationships`, `timestamp`)
 - Original legacy file untouched
 - Success reported with written path
+
+### Wikilink cascade
+- Wikilinks detected in imported file pointing to notes not in primary vault
+- Each orphan link offered for import, one at a time
+- User can approve or skip per linked file
+- Cascade-imported files go through same frontmatter transformation flow
+- Recursive cascade offered when cascade-imported files also contain orphan links
+- Cycle prevention via already-imported set
+- After cascade, all wikilinks in original file verified and unresolved ones reported
