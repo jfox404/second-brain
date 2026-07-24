@@ -12,11 +12,12 @@ A personal knowledge system for turning scattered inputs into reusable thinking.
 
 | Directory | Purpose |
 |---|---|
-| `/00 - Daily/` | Daily notes (capture surface) |
+| `/00 - Inbox/` | Daily notes + raw artifacts (capture surface) |
 | `/01 - Projects/` | Time-bound outcomes |
 | `/02 - Areas/` | Ongoing responsibilities |
 | `/03 - Resources/` | Reference/evergreen material |
-| `/04 - Archive/` | Completed or stale projects |
+| `/04 - Archive/` | Completed or stale projects + archived inbox files |
+| `/04 - Archive/daily/` | Processed daily notes |
 | `/assets/` | Images and attachments |
 
 ## Custom skills
@@ -27,6 +28,7 @@ In a fresh session, the first thing the agent should do is read the relevant ski
 - **Create project/area skill** (`.agents/skills/create-project/SKILL.md`) — creates project or area notes with selected sections
 - **Promote to folder skill** (`.agents/skills/promote-project/SKILL.md`) — converts single file project to folder structure
 - **Archive skill** (`.agents/skills/archive-project/SKILL.md`) — archives projects with salvage review
+- **Inbox review skill** (`.agents/skills/inbox-review/SKILL.md`) — processes raw artifacts from `/00 - Inbox/` that aren't daily notes
 
 ## Agent skills
 

@@ -9,7 +9,7 @@ argument-hint: "Run the daily review on today's daily note captures"
 
 See [shared patterns](../_shared/patterns.md) for index note conventions and OKF frontmatter.
 
-Process unprocessed captures in today's daily note (`/00 - Daily/YYYY-MM-DD.md`).
+Process unprocessed captures in today's daily note (`/00 - Inbox/Daily Note - YYYY-MM-DD.md`).
 
 A **capture** is a bullet line in the `## Captures` section starting with `- [HH:MM]`. An **unprocessed** capture is one without the `✅` prefix (`- ✅ [HH:MM]`).
 
@@ -17,7 +17,7 @@ A **capture** is a bullet line in the `## Captures` section starting with `- [HH
 
 ### 1. Identify today's daily note
 
-Read `/00 - Daily/` to find today's date file. If it does not exist, report nothing to process and stop.
+Read `/00 - Inbox/` to find `Daily Note - YYYY-MM-DD.md` for today's date. If it does not exist, report nothing to process and stop.
 
 ### 2. Find unprocessed captures
 
@@ -230,7 +230,19 @@ If any capture was tagged `#project/<slug>` and there is no corresponding note a
 
 Collect all such flags and present them together at the end of the daily review. Also flag any meeting wikilink `[[slug]]` that points to a non-existent project note.
 
-### 9. Summary
+### 9. Scan inbox for unprocessed artifacts
+
+After processing the daily note, scan `/00 - Inbox/` for files that do NOT match the `Daily Note - YYYY-MM-DD.md` pattern (i.e., raw inbox artifacts).
+
+For each such file, if it has been sitting unprocessed for more than 30 days (check file modification time), flag it prominently:
+
+> ⚠️ **Stale inbox artifact:** `filename.md` has been in `/00 - Inbox/` since `<date>`. Process with `/inbox-review` or archive manually.
+
+Also list any non-stale unprocessed inbox files for awareness:
+
+> 📥 **Unprocessed inbox artifacts:** `filename.md` — use `/inbox-review` to process.
+
+### 10. Summary
 
 After processing all captures, provide a brief summary:
 
@@ -245,7 +257,7 @@ After processing all captures, provide a brief summary:
 
 ## File naming
 
-- Daily note: `/00 - Daily/YYYY-MM-DD.md`
+- Daily note: `/00 - Inbox/Daily Note - YYYY-MM-DD.md`
 - Project: `/01 - Projects/<slug>.md` or `/01 - Projects/<slug>/index.md`
 - Meeting: `/01 - Projects/<slug>/YYYY-MM-DD-title-slug.md`
 - Area: `/02 - Areas/<slug>.md`

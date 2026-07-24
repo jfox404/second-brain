@@ -56,7 +56,7 @@ Project notes additionally carry `status`, `started`, and optionally `target`. D
 
 | Note type | Single file | Folder |
 |---|---|---|
-| Daily | `/00 - Daily/YYYY-MM-DD.md` | — |
+| Daily | `/00 - Inbox/Daily Note - YYYY-MM-DD.md` | — |
 | Project | `/01 - Projects/<slug>.md` | `/01 - Projects/<slug>/index.md` |
 | Area | `/02 - Areas/<slug>.md` | `/02 - Areas/<slug>/index.md` |
 | Resource | `/03 - Resources/<slug>.md` | `/03 - Resources/<slug>/index.md` |

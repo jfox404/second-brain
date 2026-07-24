@@ -29,7 +29,7 @@ Manage  → Create projects/areas, promote to folders, archive
 
 | Directory | Purpose |
 |---|---|
-| `00 - Daily/` | Daily notes — the default capture surface |
+| `00 - Inbox/` | Daily notes + raw artifacts — the default capture surface |
 | `01 - Projects/` | Time-bound outcomes with tasks, goals, decisions |
 | `02 - Areas/` | Ongoing responsibilities (health, career, etc.) |
 | `03 - Resources/` | Reference/evergreen material |

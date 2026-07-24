@@ -9,7 +9,7 @@ A single thought or piece of information saved to the system. Captures live in d
 _Avoid_: Note, snippet, bookmark
 
 **Daily note**:
-A markdown file at `/00 - Daily/YYYY-MM-DD.md` that serves as the default capture surface. Each capture is a timestamped bullet line.
+A markdown file at `/00 - Inbox/Daily Note - YYYY-MM-DD.md` that serves as the default capture surface. Each capture is a timestamped bullet line.
 _Avoid_: Journal, log, inbox
 
 **Daily review**:

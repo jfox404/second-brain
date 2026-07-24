@@ -1,7 +1,8 @@
 ---
 date: 2026-07-23
+type: daily
 ---
-# 2026-07-23
+# Daily Note - 2026-07-23
 
 ## Today's Focus
 

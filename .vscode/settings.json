@@ -1,8 +1,8 @@
 {
-  "foam.openDailyNote.directory": "00 - Daily",
-  "foam.openDailyNote.filenameFormat": "yyyy-mm-dd",
+  "foam.openDailyNote.directory": "00 - Inbox",
+  "foam.openDailyNote.filenameFormat": "'Daily Note - 'yyyy-mm-dd",
   "foam.openDailyNote.fileExtension": "md",
-  "foam.openDailyNote.titleFormat": "yyyy-mm-dd",
+  "foam.openDailyNote.titleFormat": "'Daily Note - 'yyyy-mm-dd",
   "foam.edit.linkReferenceDefinitions": "withExtensions",
   "foam.graph.style": {
     "type": "force-directed",
