@@ -279,6 +279,10 @@ After processing the target daily note, provide a brief summary:
 - **Flags:** any missing project notes
 - **Next step:** if another day needs review, rerun `/daily-review YYYY-MM-DD` for that specific date
 
+### 11. Reflect
+
+After completing the summary, run the **reflect skill** (`.agents/skills/reflect/SKILL.md`). It evaluates whether any user corrections, non-obvious procedures, or durable preferences were discovered during this run and routes findings to the user model or skill patches. If nothing notable, it reports "Reflection: nothing to persist."
+
 ## File naming
 
 - Daily note: `/00 - Inbox/Daily Note - YYYY-MM-DD.md`

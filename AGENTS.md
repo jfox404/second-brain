@@ -8,6 +8,12 @@ A personal knowledge system for turning scattered inputs into reusable thinking.
 
 **Workflow:** capture → review → promote → manage
 
+## Self-improvement loop
+
+The agent runs a **reflection** step after every major operation (daily review, inbox review, archive, create-project) and as a self-nudge after any user correction. The reflect skill evaluates recent work and routes findings to `docs/agents/USER.md` (user model) or skill refinement/synthesis. See `.agents/skills/reflect/SKILL.md`.
+
+Before any operation, if the user has a `USER.md` on record, read it. After any correction, write to it.
+
 **Legacy vault location:** `/Users/soj3828/Library/CloudStorage/OneDrive-NorthwesternMutual/Knowledge Vaults/second-brain`
 
 ## Vault structure
@@ -43,6 +49,7 @@ In a fresh session, the first thing the agent should do is read the relevant ski
 - **Promote to folder skill** (`.agents/skills/promote-project/SKILL.md`) — converts single file project to folder structure
 - **Archive skill** (`.agents/skills/archive-project/SKILL.md`) — archives projects with salvage review
 - **Inbox review skill** (`.agents/skills/inbox-review/SKILL.md`) — processes raw artifacts from `/00 - Inbox/` that aren't daily notes
+- **Reflect skill** (`.agents/skills/reflect/SKILL.md`) — evaluates recent work for durable improvements: user model updates, skill patches, or skill synthesis
 
 ## Agent skills
 
