@@ -22,6 +22,18 @@ A personal knowledge system for turning scattered inputs into reusable thinking.
 | `/04 - Archive/daily/` | Processed daily notes |
 | `/assets/` | Images and attachments |
 
+### Canonical PARA root folders (strict)
+
+Only these exact root folders are valid PARA destinations:
+
+- `00 - Inbox`
+- `01 - Projects`
+- `02 - Areas`
+- `03 - Resources`
+- `04 - Archive`
+
+Agents must never create new PARA root variants (for example `02-AREAS`, `02 - AREAS`, `01-projects`, etc.). Always map imports and writes to the existing canonical folders above.
+
 ## Custom skills
 
 In a fresh session, the first thing the agent should do is read the relevant skill file from `.scratch/second-brain/spec.md` and the ticket from `.scratch/second-brain/issues/`. The following skills have been specced:

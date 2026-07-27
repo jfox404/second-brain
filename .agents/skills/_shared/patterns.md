@@ -61,3 +61,15 @@ Project notes additionally carry `status`, `started`, and optionally `target`. D
 | Area | `/02 - Areas/<slug>.md` | `/02 - Areas/<slug>/index.md` |
 | Resource | `/03 - Resources/<slug>.md` | `/03 - Resources/<slug>/index.md` |
 | Archive | `/04 - Archive/<slug>.md` | `/04 - Archive/<slug>/index.md` |
+
+## Canonical PARA roots only
+
+Use only these exact existing root folders:
+
+- `00 - Inbox`
+- `01 - Projects`
+- `02 - Areas`
+- `03 - Resources`
+- `04 - Archive`
+
+Never create or write to variant root names (e.g. `02-AREAS`, `02 - AREAS`, `01-projects`). If a source path uses a variant, normalize it to the canonical root before writing.

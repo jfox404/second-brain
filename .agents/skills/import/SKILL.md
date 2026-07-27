@@ -7,7 +7,7 @@ argument-hint: path=<absolute-or-relative-file-or-directory>
 
 # Import Skill — Single File & Bulk Directory Import with Wikilink Cascade, Tag Reconciliation, and Asset Copy
 
-Import legacy `.md` files into the primary vault. Accepts a single file or a directory path. Relative paths are resolved from the legacy vault location declared in `AGENTS.md`. For a single file, reads the legacy file, proposes an OKF frontmatter mapping, gets user approval, determines the target PARA folder from the source path, and writes the transformed file. For a directory, walks all `.md` files recursively, processes them sequentially with user approval per file, and preserves subdirectory structure under PARA folders.
+Import legacy `.md` files into the primary vault. Accepts a single file or a directory path. Relative paths are resolved from the legacy vault location declared in `AGENTS.md`. For a single file, reads the legacy file, proposes an OKF frontmatter mapping, gets user approval, determines the target PARA folder from the source path, and writes the transformed file. For a directory, walks all `.md` files recursively, processes them sequentially with user approval per file, and preserves subdirectory structure under canonical PARA folders.
 
 After each import, the agent scans for `[[wikilinks]]` to notes not yet in the primary vault and offers to cascade-import each linked file from the legacy vault.
 
@@ -81,7 +81,7 @@ List the non-markdown files to the user:
 > - `<file2>` (e.g., `docs/schema.pdf`)
 
 For each non-markdown file, ask: "Import this file? It will be copied as-is to the corresponding path in the primary vault." (yes / skip). 
-- If yes, copy the file to the primary vault at the path relative to `LEGACY_VAULT_ROOT` (same subdirectory structure, as resolved in Step 6 for markdown files).
+- If yes, copy the file to the primary vault at the path relative to `LEGACY_VAULT_ROOT`, applying the same canonical PARA root normalization defined in Step 6.
 - If no, skip it and move to the next.
 
 Collect skipped non-markdown files for the final summary.
@@ -225,8 +225,32 @@ During bulk import, `LEGACY_VAULT_ROOT` was already determined in Step B3 — us
 **Compute relative path:**
 `RELATIVE_PATH` = path of current file relative to legacy vault root.
 
+**Canonical PARA roots (must already exist):**
+- `00 - Inbox`
+- `01 - Projects`
+- `02 - Areas`
+- `03 - Resources`
+- `04 - Archive`
+
+Never create or use variant PARA root names like `02-AREAS`, `02 - AREAS`, `01-projects`, etc.
+
+**Normalize top-level PARA segment from `RELATIVE_PATH`:**
+1. Split `RELATIVE_PATH` into `<top-level-segment>/<remaining-subpath>`.
+2. Normalize `<top-level-segment>` for matching (case-insensitive; treat spaces, hyphens, and underscores as separators).
+3. Map recognized variants to canonical roots:
+   - Any `01 ... projects` variant → `01 - Projects`
+   - Any `02 ... areas` variant → `02 - Areas`
+   - Any `03 ... resources` variant → `03 - Resources`
+   - Any `04 ... archive` variant → `04 - Archive`
+   - Any `00 ... inbox` variant → `00 - Inbox`
+4. If no PARA segment can be recognized from the path, choose canonical root from `type`:
+   - `project` → `01 - Projects`
+   - `area` → `02 - Areas`
+   - `resource` → `03 - Resources`
+   - otherwise ask the user to choose one of the canonical roots above.
+
 **Compute target path:**
-`TARGET_PATH` = `<primary-vault-root>/<RELATIVE_PATH>`
+`TARGET_PATH` = `<primary-vault-root>/<canonical-root>/<remaining-subpath>`
 
 The primary vault root is the repo root (`/home/jon/projects/second-brain`).
 
@@ -236,6 +260,11 @@ The primary vault root is the repo root (`/home/jon/projects/second-brain`).
 - Relative path: `01 - Projects/Foo.md`
 - Target path: `/home/jon/projects/second-brain/01 - Projects/Foo.md`
 
+**Variant example:**
+- Legacy file: `/home/jon/old-sb/02-AREAS/Health/Weekly Review.md`
+- Relative path: `02-AREAS/Health/Weekly Review.md`
+- Canonical target path: `/home/jon/projects/second-brain/02 - Areas/Health/Weekly Review.md`
+
 ## Step 7 — Check target directory
 
 Check if the target directory (parent of `TARGET_PATH`) exists in the primary vault.
@@ -243,8 +272,12 @@ Check if the target directory (parent of `TARGET_PATH`) exists in the primary va
 If it does NOT exist:
 - Inform the user: "The target directory `<parent>` does not exist in the primary vault."
 - Ask: "Create it?" (yes / no)
-- If yes, create the directory (using `mkdir -p`).
+- If yes, create it using `mkdir -p` **only if** `<parent>` is under one of the canonical PARA roots. Never create a new PARA root directory.
 - If no, ask the user for an alternative target path, or cancel.
+
+Before creating any directory, verify the first path segment under the vault root is one of:
+`00 - Inbox`, `01 - Projects`, `02 - Areas`, `03 - Resources`, `04 - Archive`.
+If not, stop and ask the user to select a canonical PARA root.
 
 Also check if a file already exists at `TARGET_PATH`. If it does:
 - Inform the user: "A file already exists at `<TARGET_PATH>`."
@@ -450,6 +483,7 @@ When an imported file references assets (detected during Step 8):
 - **Unknown legacy fields**: Carry them over into OKF frontmatter as-is (within OKF conventions) and note them to the user.
 - **Multiple tags formats**: Legacy tags may be `[tag1, tag2]` (list) or `tag1, tag2` (comma-separated string). Normalize to YAML list format.
 - **Non-PARA path**: If the file is not under a PARA folder, ask the user which PARA folder it should go into and derive the target path accordingly.
+- **PARA variant root in source path**: If the source uses a variant root like `02-AREAS` or `03_resources`, normalize to canonical root (`02 - Areas`, `03 - Resources`) before computing `TARGET_PATH`.
 - **Date formats other than YYYY-MM-DD**: Convert to ISO datetime if possible; if format is unrecognizable, use the current datetime and note it to the user.
 - **Circular cascade**: If two notes wikilink to each other and neither is in the primary vault, importing one triggers an offer to import the other. The already-imported set prevents re-importing the same file twice.
 - **Self-referencing wikilinks**: A file that wikilinks to itself should be ignored during cascade (the file already exists in the primary vault — it was just imported).
@@ -463,7 +497,7 @@ When an imported file references assets (detected during Step 8):
 - OKF mapping proposed to user and approved (possibly modified)
 - Tags reconciled against vault glossary (user decides per conflict)
 - Target PARA path determined from source path
-- Target directory created if missing (user approved)
+- Target directory created if missing (user approved) under canonical PARA roots only
 - File collision handled if present
 - Source field transformed to `relationships.source` + body Sources section
 - Referenced assets detected, offered for copy, and copied if approved
@@ -476,7 +510,7 @@ When an imported file references assets (detected during Step 8):
 - Non-markdown files listed and offered for import individually
 - Legacy vault root determined from directory path
 - Markdown files processed sequentially with user approval per file
-- Subdirectory structure under PARA folders preserved in the primary vault
+- Subdirectory structure under canonical PARA folders preserved in the primary vault
 - User can skip individual files
 - Wikilink cascade runs per imported file during the walk
 - Bulk summary reported (N imported, M skipped, any errors)
