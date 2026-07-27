@@ -6,8 +6,8 @@
 
 **Status:** ready-for-agent
 
-- [ ] Implement skill-to-correction matching: does the correction topic match any existing skill's name/description?
-- [ ] Implement patch-only refinement mechanics (targeted edit)
-- [ ] Implement user confirmation flow for curated skill changes (surfaced for approval before applying)
-- [ ] Reflect self-guard: if "last action was reflection" → stop (no nested loops)
-- [ ] Verify: user corrects a workflow that matches an existing skill, agent proposes a patch, user confirms, skill is patched, change is minimal
+- [x] Implement skill-to-correction matching: does the correction topic match any existing skill's name/description?
+- [x] Implement patch-only refinement mechanics (targeted edit)
+- [x] Implement user confirmation flow for curated skill changes (surfaced for approval before applying)
+- [x] Reflect self-guard: if "last action was reflection" → stop (no nested loops)
+- [x] Verify: user corrects a workflow that matches an existing skill, agent proposes a patch, user confirms, skill is patched, change is minimal
