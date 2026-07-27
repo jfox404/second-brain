@@ -25,6 +25,62 @@ Promote → AI extracts notable captures to permanent notes
 Manage  → Create projects/areas, promote to folders, archive
 ```
 
+## How to leverage this system
+
+**The core loop is three minutes a day.** Capture freely — no filing decisions. Then let the AI do the organizing.
+
+### The daily habit
+
+1. **Capture** throughout the day with `sb "thought"` — dump ideas, todos, links, meeting notes. No structure required.
+2. **Review once daily** — open Copilot agent mode and say `"run the daily review"`. The AI:
+   - Tags each capture with PARA type (`#project/x`, `#area/x`, `#resource/x`)
+   - Links captures to related notes with `[[wikilinks]]`
+   - Extracts `[action:]` items into project task sections and `tasks.md`
+   - Fetches URLs and synthesizes resource notes
+   - Marks processed captures with ✅
+3. **That's it.** The AI handles organization, you handle thinking.
+
+### AI workflow cheat sheet
+
+| Prompt | What happens |
+|---|---|
+| `"run the daily review"` | Process all unprocessed captures in today's daily note |
+| `"create a project called &lt;name&gt;"` | Interactive wizard for a new project note |
+| `"create an area called &lt;name&gt; with sections overview, tasks, decisions"` | Non-interactive area creation |
+| `"promote &lt;project&gt; to a folder"` | Convert single-file project to `index.md` + sub-notes |
+| `"archive &lt;project&gt;"` | Move to Archive with knowledge salvage review |
+| `"review the inbox"` | Process raw artifacts (transcripts, PDF notes, etc.) |
+
+### The capture pipeline
+
+```
+Raw capture (sb "thought")          ← zero friction, no decisions
+   │
+   ▼
+Enriched capture (✅)               ← AI adds tags, links, actions
+   │
+   ▼
+Promoted note (standalone file)     ← AI extracts durable ideas
+   │
+   ▼
+Project/area/resource folder        ← grows organically over time
+   │
+   ▼
+Archive (if stale/completed)        ← periodic cleanup, AI suggests
+```
+
+**You never file anything.** You capture, AI promotes, you curate with simple prompts.
+
+### PARA philosophy in practice
+
+| Folder | What lives there | When it goes there |
+|---|---|---|
+| `00 - Inbox` | Daily notes, raw artifacts | All captures land here |
+| `01 - Projects` | Time-bound outcomes with deadlines | AI promotes notable captures |
+| `02 - Areas` | Ongoing responsibilities (health, career) | Created via skill, never archived |
+| `03 - Resources` | Evergreen reference material | AI promotes URLs/book notes here |
+| `04 - Archive` | Completed or stale work | Archived via skill, salvaged first |
+
 ## Vault structure
 
 | Directory | Purpose |
