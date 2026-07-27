@@ -1,31 +1,44 @@
 ---
 name: daily-review
-description: Enrich today's daily note captures with tags, links, and actions; maintain tasks.md, project task sections, and index notes.
+description: Enrich unprocessed captures for one daily note date at a time with tags, links, and actions; maintain tasks.md, project task sections, and index notes.
 disable-model-invocation: true
-argument-hint: "Run the daily review on today's daily note captures"
+argument-hint: "Run daily review for a single date (YYYY-MM-DD). If omitted, use today."
 ---
 
 # Daily Review
 
 See [shared patterns](../_shared/patterns.md) for index note conventions and OKF frontmatter.
 
-Process unprocessed captures in today's daily note (`/00 - Inbox/Daily Note - YYYY-MM-DD.md`).
+Process unprocessed captures in exactly one daily note under `/00 - Inbox/Daily Note - YYYY-MM-DD.md` per run.
 
 A **capture** is a bullet line in the `## Captures` section starting with `- [HH:MM]`. An **unprocessed** capture is one without the `✅` prefix (`- ✅ [HH:MM]`).
 
+## Review scope
+
+Resolve exactly one target daily note before starting:
+
+1. If the user specifies a date argument (`YYYY-MM-DD`), use that date.
+2. Otherwise, use today's date.
+3. Process only that single note for this run.
+
+If the target note does not exist, report it missing and stop.
+If the target note exists but has no unprocessed captures/meetings to act on, report nothing to process and stop.
+
 ## Process
 
-### 1. Identify today's daily note
+### 1. Identify target daily note
 
-Read `/00 - Inbox/` to find `Daily Note - YYYY-MM-DD.md` for today's date. If it does not exist, report nothing to process and stop.
+Resolve the target file as `/00 - Inbox/Daily Note - YYYY-MM-DD.md` for the selected date.
+
+If the file is missing, report the missing date and stop.
 
 ### 2. Find unprocessed captures
 
-In the `## Captures` section, find every bullet matching `- [HH:MM]` (raw captures) but NOT `- ✅ [HH:MM]` (already processed).
+In the target daily note, in the `## Captures` section find every bullet matching `- [HH:MM]` (raw captures) but NOT `- ✅ [HH:MM]` (already processed).
 
 ### 3. Enrich each capture
 
-For every unprocessed capture, perform these steps **in order**:
+For every unprocessed capture in the target daily note, perform these steps **in order**:
 
 #### a. Assign a PARA type tag
 
@@ -73,7 +86,7 @@ Change the capture prefix from `- ` to `- ✅ `.
 
 ### 4. Process meeting notes
 
-In the `## Meetings` section, find every `### <Title> [[project-wikilink]]` entry.
+In the `## Meetings` section of the target daily note, find every `### <Title> [[project-wikilink]]` entry.
 
 For each meeting entry:
 
@@ -114,7 +127,7 @@ date: YYYY-MM-DD
 attendees: [names]
 tags: [project/<slug>]
 relationships:
-  source: [[YYYY-MM-DD]] (daily note)
+  source: [[YYYY-MM-DD]] (daily note for this meeting)
 timestamp: <current ISO datetime>
 ---
 
@@ -167,9 +180,9 @@ For every action item — both `[action:]` from captures (step 3c) and `- [ ]` f
 
 For each project note at `/01 - Projects/<slug>.md` (or `01 - Projects/<slug>/index.md`):
 
-- If the file does not exist, **flag it** (see step 9)
+- If the file does not exist, **flag it** (see step 8)
 - If it exists, add or update its `## Tasks` section:
-  - Add each action item as `- [ ] <action text> [[wikilink to daily note]]`
+  - Add each action item as `- [ ] <action text> [[wikilink to source daily note]]`
   - Preserve any existing task items that are not yet checked off
 
 ### 6. Update root tasks.md
@@ -232,7 +245,7 @@ Collect all such flags and present them together at the end of the daily review.
 
 ### 9. Scan inbox for unprocessed artifacts
 
-After processing the daily note, scan `/00 - Inbox/` for files that do NOT match the `Daily Note - YYYY-MM-DD.md` pattern (i.e., raw inbox artifacts).
+After processing the target daily note, scan `/00 - Inbox/` for files that do NOT match the `Daily Note - YYYY-MM-DD.md` pattern (i.e., raw inbox artifacts).
 
 For each such file, if it has been sitting unprocessed for more than 30 days (check file modification time), flag it prominently:
 
@@ -244,8 +257,9 @@ Also list any non-stale unprocessed inbox files for awareness:
 
 ### 10. Summary
 
-After processing all captures, provide a brief summary:
+After processing the target daily note, provide a brief summary:
 
+- **Daily note reviewed:** `YYYY-MM-DD`
 - **Files modified:** list of files changed
 - **Captures enriched:** count of captures processed
 - **Meetings processed:** count of meetings processed
@@ -254,6 +268,7 @@ After processing all captures, provide a brief summary:
 - **Meetings promoted:** list of new standalone meeting files
 - **Resources created:** list of new resource notes
 - **Flags:** any missing project notes
+- **Next step:** if another day needs review, rerun `/daily-review YYYY-MM-DD` for that specific date
 
 ## File naming
 
