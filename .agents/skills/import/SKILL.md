@@ -2,12 +2,12 @@
 name: import
 description: Import single or bulk legacy files into the primary vault with OKF frontmatter transformation
 disable-model-invocation: true
-argument-hint: path=<file-or-directory>
+argument-hint: path=<absolute-or-relative-file-or-directory>
 ---
 
 # Import Skill — Single File & Bulk Directory Import with Wikilink Cascade, Tag Reconciliation, and Asset Copy
 
-Import legacy `.md` files into the primary vault. Accepts a single file or a directory path. For a single file, reads the legacy file, proposes an OKF frontmatter mapping, gets user approval, determines the target PARA folder from the source path, and writes the transformed file. For a directory, walks all `.md` files recursively, processes them sequentially with user approval per file, and preserves subdirectory structure under PARA folders.
+Import legacy `.md` files into the primary vault. Accepts a single file or a directory path. Relative paths are resolved from the legacy vault location declared in `AGENTS.md`. For a single file, reads the legacy file, proposes an OKF frontmatter mapping, gets user approval, determines the target PARA folder from the source path, and writes the transformed file. For a directory, walks all `.md` files recursively, processes them sequentially with user approval per file, and preserves subdirectory structure under PARA folders.
 
 After each import, the agent scans for `[[wikilinks]]` to notes not yet in the primary vault and offers to cascade-import each linked file from the legacy vault.
 
@@ -23,19 +23,37 @@ See [shared patterns](../_shared/patterns.md) for OKF frontmatter conventions.
 --path /path/to/legacy/vault/01 - Projects/
 ```
 
-## Step 1 — Validate the path argument
+```
+--path 01 - Projects/My Note.md
+```
 
-Check that `--path` is provided and the path exists. If not, report the error and stop.
+```
+--path 01 - Projects/
+```
 
-Resolve the path to an absolute path.
+## Step 1 — Resolve and validate the path argument
+
+Check that `--path` is provided. If not, report the error and stop.
+
+Read `AGENTS.md` at the repo root and extract `Legacy vault location` as `LEGACY_VAULT_FROM_AGENTS`.
+
+Resolve `--path` as follows:
+- If `--path` is absolute, use it directly.
+- If `--path` is relative, join it to `LEGACY_VAULT_FROM_AGENTS`.
+
+If `--path` is relative and `LEGACY_VAULT_FROM_AGENTS` is missing or empty, report:
+"Relative path provided, but no legacy vault location is configured in AGENTS.md. Add `Legacy vault location` to AGENTS.md or pass an absolute --path."
+Then stop.
+
+Resolve the resulting path to an absolute path and store as `LEGACY_PATH`.
+
+Check that `LEGACY_PATH` exists. If not, report the error and stop.
 
 **Check if path is a file or directory:**
 - If it's a regular file ending with `.md`, proceed to **Step 2 (Single-file import flow)** below.
 - If it's a directory, proceed to **Bulk Directory Import** (Section B below).
 - If it's a regular file but not `.md`, report: "The specified file is not a `.md` file. Only markdown files can be imported." and stop.
 - If it's something else (symlink, etc.), report the error and stop.
-
-Store the resolved path as `LEGACY_PATH`.
 
 ---
 

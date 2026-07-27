@@ -8,6 +8,8 @@ A personal knowledge system for turning scattered inputs into reusable thinking.
 
 **Workflow:** capture → review → promote → manage
 
+**Legacy vault location:** `/Users/soj3828/Library/CloudStorage/OneDrive-NorthwesternMutual/Knowledge Vaults/second-brain`
+
 ## Vault structure
 
 | Directory | Purpose |
