@@ -22,6 +22,8 @@ The agent runs a **reflection** step (see `.agents/skills/reflect/SKILL.md`) whe
 | **Non-obvious procedure** | You discover a ≥3-step procedure that isn't already documented in any skill. Reflect and capture it as a new skill or skill refinement. |
 | **Major operation completion** | After every daily review, inbox review, archive, or create-project. |
 
+**`z-*` guardrails:** The agent must never delete or rename a `z-*` synthesized skill (see reflect skill's [Guardrails](#) section). Reflect may patch `z-*` skills autonomously.
+
 Before any operation, if the user has a `USER.md` on record, read it. After any correction, write to it.
 
 **Legacy vault location:** `/Users/soj3828/Library/CloudStorage/OneDrive-NorthwesternMutual/Knowledge Vaults/second-brain`
@@ -59,7 +61,7 @@ In a fresh session, the first thing the agent should do is read the relevant ski
 - **Promote to folder skill** (`.agents/skills/promote-project/SKILL.md`) — converts single file project to folder structure
 - **Archive skill** (`.agents/skills/archive-project/SKILL.md`) — archives projects with salvage review
 - **Inbox review skill** (`.agents/skills/inbox-review/SKILL.md`) — processes raw artifacts from `/00 - Inbox/` that aren't daily notes
-- **Reflect skill** (`.agents/skills/reflect/SKILL.md`) — evaluates recent work for durable improvements: user model updates, skill patches, or skill synthesis
+- **Reflect skill** (`.agents/skills/reflect/SKILL.md`) — evaluates recent work for durable improvements: user model updates, skill patches, or `z-*` skill synthesis
 
 ## Agent skills
 

@@ -4,10 +4,10 @@
 
 **Blocked by:** 02 — User model writing, 03 — Skill refinement
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Implement synthesis trigger: workflow doesn't map to any existing skill AND meets complexity/correction threshold
-- [ ] Create z-* skill format: name, description, trigger, body (simpler than curated skills)
-- [ ] Implement writing mechanics: create `.agents/skills/z-*/SKILL.md` with frontmatter
-- [ ] Enforce guardrail: synthesized skills are read-only to themselves (can be patched by reflect, never deleted/renamed by agent)
-- [ ] Verify: agent executes a non-obvious multi-step procedure, reflect creates a new `z-*` skill, skill is valid markdown with correct format
+- [x] Implement synthesis trigger: workflow doesn't map to any existing skill AND meets complexity/correction threshold
+- [x] Create z-* skill format: name, description, trigger, body (simpler than curated skills)
+- [x] Implement writing mechanics: create `.agents/skills/z-*/SKILL.md` with frontmatter
+- [x] Enforce guardrail: synthesized skills are read-only to themselves (can be patched by reflect, never deleted/renamed by agent)
+- [x] Verify: agent executes a non-obvious multi-step procedure, reflect creates a new `z-*` skill, skill is valid markdown with correct format
