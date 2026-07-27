@@ -10,7 +10,17 @@ A personal knowledge system for turning scattered inputs into reusable thinking.
 
 ## Self-improvement loop
 
-The agent runs a **reflection** step after every major operation (daily review, inbox review, archive, create-project) and as a self-nudge after any user correction. The reflect skill evaluates recent work and routes findings to `docs/agents/USER.md` (user model) or skill refinement/synthesis. See `.agents/skills/reflect/SKILL.md`.
+The agent runs a **reflection** step (see `.agents/skills/reflect/SKILL.md`) when any heuristic trigger fires. The reflect skill evaluates recent work and routes findings to `docs/agents/USER.md` (user model) or skill refinement/synthesis.
+
+### Heuristic triggers
+
+| Trigger | When to fire |
+|---|---|
+| **User correction** | The user corrects your approach, output, or behaviour — even mid-operation. Stop, reflect, write to USER.md, then resume. |
+| **5+ tool calls** | After 5 consecutive tool calls without user input. Pause and reflect on whether the trajectory is still aligned with user intent. |
+| **Error recovery** | After recovering from an error (command failure, unexpected output). Reflect on what caused the error and whether the approach needs adjustment. |
+| **Non-obvious procedure** | You discover a ≥3-step procedure that isn't already documented in any skill. Reflect and capture it as a new skill or skill refinement. |
+| **Major operation completion** | After every daily review, inbox review, archive, or create-project. |
 
 Before any operation, if the user has a `USER.md` on record, read it. After any correction, write to it.
 

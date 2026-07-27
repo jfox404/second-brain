@@ -4,9 +4,9 @@
 
 **Blocked by:** 01 — Reflect skill scaffold + AGENTS.md + USER.md
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Define heuristic triggers in AGENTS.md: user correction, 5+ tool calls, error recovery, non-obvious procedure → invoke reflect
-- [ ] Extend reflect skill's decision tree to route user corrections and expressed preferences to USER.md writes
-- [ ] Implement USER.md write mechanics (append or replace entry by section)
-- [ ] Verify: user corrects agent during a workflow, USER.md gains a durable entry
+- [x] Define heuristic triggers in AGENTS.md: user correction, 5+ tool calls, error recovery, non-obvious procedure → invoke reflect
+- [x] Extend reflect skill's decision tree to route user corrections and expressed preferences to USER.md writes
+- [x] Implement USER.md write mechanics (append or replace entry by section)
+- [x] Verify: user corrects agent during a workflow, USER.md gains a durable entry
