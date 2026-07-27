@@ -16,4 +16,8 @@
 
 **Blocked by:** 05 (auto-maintenance linting pass provides the pass infrastructure)
 
-**Status:** ready-for-agent
+**Status:** done
+
+**Implementation:**
+- Created `.agents/skills/z-progressive-summarization/SKILL.md` — standalone skill with 3 layer definitions and a standalone pass procedure. Tracks via `summarized` frontmatter field. Layer 2 at ~7 days, layer 3 at ~30 days. Respects `skip`/`max` flags.
+- Extended daily-review skill: added step 3d (general promotion evaluation for non-URL captures), step 3f (apply progressive summarization layer 1 to any promoted note), step 11 (auto-check for notes due for layers 2 and 3 during every daily review), and documented `summarized` field in frontmatter patterns.

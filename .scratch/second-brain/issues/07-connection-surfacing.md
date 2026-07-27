@@ -17,4 +17,9 @@
 
 **Blocked by:** 05 (auto-maintenance linking infrastructure)
 
-**Status:** ready-for-agent
+**Status:** done
+
+**Implementation:**
+- Enhanced daily review step 3b — capture-time recall now surfaces up to 3 related notes with "why this relates" and asks for confirmation before linking
+- Created `.agents/skills/z-weekly-weave/SKILL.md` — creates a themed digest at `03 - Resources/_digests/weekly-YYYY-MM-DD.md` from the past 7 days of captures. Daily review step 12 checks if a digest is due and offers to run it.
+- Created `.agents/skills/z-serendipity-prompt/SKILL.md` — surfaces a forgotten note (90+ days untouched) with open/link/archive/dismiss/skip options. Auto-maintenance step 10 offers to run it after linting fixes.

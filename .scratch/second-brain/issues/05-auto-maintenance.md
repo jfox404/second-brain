@@ -16,4 +16,8 @@
 
 **Blocked by:** None
 
-**Status:** ready-for-agent
+**Status:** done
+
+**Implementation:**
+- Created `.agents/skills/z-auto-maintenance/SKILL.md` — standalone linting skill with 9 procedures (scan, orphans, dead links, frontmatter validation, directory conformity, duplicates, restructuring suggestions, report, offer to fix)
+- Extended daily-review skill with step 10 — auto-maintenance linting pass (subset: orphan detection, dead link check, frontmatter validation, directory conformity) that runs after inbox scan and before summary

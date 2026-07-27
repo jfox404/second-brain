@@ -48,9 +48,13 @@ Choose one of `#project/<slug>`, `#area/<slug>`, or `#resource/<slug>` based on 
 - `#area/x` — ongoing responsibility (health, career, finances, relationships, learning)
 - `#resource/x` — reference material (article, book, video, concept, tool)
 
-#### b. Suggest [[wikilinks]]
+#### b. Suggest [[wikilinks]] with capture-time recall
 
-Search the vault for related notes. Add one or more `[[wikilinks]]` inline after the tag. Prefer existing notes; do not create new ones unless the link is essential.
+Search the vault for related notes in `01 - Projects/`, `02 - Areas/`, `03 - Resources/`. For up to 3 strongest matches, present:
+
+> **Related:** [[Note Title]] — _description_ — relates because <one-sentence reason>
+
+If the user confirms a link, add `[[wikilink]]` inline after the tag. If the user declines, skip. If the user is not present (non-interactive mode), add the wikilink automatically for high-confidence matches only. Prefer existing notes; do not create new ones unless the link is essential.
 
 #### c. Extract action items
 
@@ -60,7 +64,19 @@ Formats recognized:
 - `[action: do something]`
 - `[action: do something by friday]`
 
-#### d. Promote URL captures
+#### d. Evaluate for promotion
+
+Assess whether the capture (if it has no URL) is durable, complex, or novel enough to promote to a standalone note. Heuristics:
+- Contains a detailed explanation or argument (not just a quick thought)
+- Introduces a new concept, project, or reference not yet in the vault
+- Is too long for a single bullet (2+ sentences of substantive content)
+- Represents a decision, finding, or insight worth preserving independently
+
+If promotable, create a file at the appropriate PARA path with OKF frontmatter and body content extracted from the capture. Replace the capture line with a `[[wikilink]]` to the new note.
+
+If not promotable, leave it in place (enriched with tag and links from steps a-c).
+
+#### e. Promote URL captures
 
 If the capture contains a URL (http/https), fetch the linked content and synthesize a promoted resource note:
 
@@ -80,7 +96,15 @@ If the capture contains a URL (http/https), fetch the linked content and synthes
 3. Write a synthesis of the content in the body — key claims, quotes, structure — in your own words
 4. Replace the URL in the capture with `[[<slug>]]`
 
-#### e. Mark as processed
+#### f. Apply progressive summarization layer 1
+
+If the capture was promoted (step d or e created a new standalone note), apply **layer 1** of progressive summarization (`.agents/skills/z-progressive-summarization/SKILL.md`):
+
+1. Ensure `description` in frontmatter is a 1-2 sentence extract of key claims
+2. Add `summarized: 1` to the new note's frontmatter
+3. Verify PARA type tag matches the `type` field
+
+#### g. Mark as processed
 
 Change the capture prefix from `- ` to `- ✅ `.
 
@@ -264,7 +288,42 @@ Also list any non-stale unprocessed inbox files for awareness:
 
 > 📥 **Unprocessed inbox artifacts:** `filename.md` — use `/inbox-review` to process.
 
-### 10. Summary
+### 10. Run auto-maintenance (linting pass)
+
+After the inbox scan, run the **z-auto-maintenance** linting pass (`.agents/skills/z-auto-maintenance/SKILL.md`). This runs a subset of auto-maintenance focused on daily-review-relevant checks:
+
+1. **Orphan detection** — scan PARA folders (01-03) for notes with zero backlinks. Report any discovered during this review.
+2. **Dead wikilink detection** — scan for broken `[[wikilinks]]` across the vault. Report findings.
+3. **Frontmatter validation** — check promoted notes created during THIS review have valid OKF frontmatter.
+4. **Directory conformity** — verify no note created/modified during this review sits in the wrong PARA folder.
+
+Skip restructuring suggestions (promotion/archival) during daily review — those are better handled in a dedicated auto-maintenance pass. Only present findings if something was discovered; if clean, report "Auto-maintenance: vault is clean."
+
+### 11. Run progressive summarization check
+
+After auto-maintenance, check whether any previously-promoted notes in `01 - Projects/`, `02 - Areas/`, `03 - Resources/` are due for the next summarization layer.
+
+For each note:
+- If `summarized` is `1` and `timestamp` >= 7 days ago → **due for layer 2**
+- If `summarized` is `2` and `timestamp` >= 30 days ago → **due for layer 3**
+
+Apply the due layers now (follow the procedures in `.agents/skills/z-progressive-summarization/SKILL.md`). Report:
+
+> **Progressive summarization:** Layer 2 applied to N notes, layer 3 applied to M notes.
+
+If no notes are due, report: "Progressive summarization: no notes due."
+
+### 12. Check for weekly weave
+
+Check whether a weekly weave digest exists for the current ISO week at `03 - Resources/_digests/weekly-YYYY-MM-DD.md` (where the date is the Monday of the current week).
+
+If no digest exists for this week and there are captures from the past 7 days, suggest:
+
+> 📅 **Weekly weave available:** Last week's captures haven't been woven yet. Run the weekly weave?
+
+If the user confirms, run the **z-weekly-weave** skill (`.agents/skills/z-weekly-weave/SKILL.md`).
+
+### 13. Summary
 
 After processing the target daily note, provide a brief summary:
 
@@ -277,9 +336,12 @@ After processing the target daily note, provide a brief summary:
 - **Meetings promoted:** list of new standalone meeting files
 - **Resources created:** list of new resource notes
 - **Flags:** any missing project notes
+- **Auto-maintenance:** linting findings (or clean)
+- **Summarization:** layers applied (or no notes due)
+- **Weekly weave:** digest created (or not yet due)
 - **Next step:** if another day needs review, rerun `/daily-review YYYY-MM-DD` for that specific date
 
-### 11. Reflect
+### 14. Reflect
 
 After completing the summary, run the **reflect skill** (`.agents/skills/reflect/SKILL.md`). It evaluates whether any user corrections, non-obvious procedures, or durable preferences were discovered during this run and routes findings to the user model or skill patches. If nothing notable, it reports "Reflection: nothing to persist."
 
@@ -315,3 +377,4 @@ timestamp: <ISO datetime>
 ---
 ```
 Projects also have `status`, `started`, `target` in frontmatter. Meetings also have `date`, `project`, `attendees` in frontmatter.
+Any promoted note may carry an optional `summarized` field tracking progressive summarization layer (`1`, `2`, `3`, `skip`, or `max`).
