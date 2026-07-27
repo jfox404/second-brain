@@ -203,9 +203,18 @@ Create or update `/tasks.md` at vault root. Format:
 ```
 
 - Group by project heading (`## Project: Name`)
+- If an action item has no valid associated project note (missing, ambiguous, or unresolved project context), place it under `## Ad Hoc Requests` instead of creating a placeholder project heading
 - Each task is `- [ ] description [[link]]`
 - Preserve any existing unchecked tasks that were not part of this review pass
 - Remove tasks that have been completed (`- [x]`) if the source capture has also changed
+
+Use this additional section when needed:
+
+```markdown
+## Ad Hoc Requests
+
+- [ ] <action text> [[wikilink to source note]]
+```
 
 ### 7. Update index notes
 

@@ -70,7 +70,12 @@ Apply defaults for any missing parameter and proceed to creation.
 5. **Create the file:**
    - **Single file**: `foam note create --title "<Title>" --dir <dir>` then overwrite the file with the full frontmatter + body. (Foam creates the file and indexes it; you replace the placeholder content.)
    - **Folder**: `mkdir -p <dir>/<slug>` then write `<dir>/<slug>/index.md` with the full frontmatter + body. Do not use `foam note create` for folders — foam creates flat files only.
-6. **Report back**: tell the user the note was created and at what path.
+6. **Sync root tasks.md for project notes** (required when `type=project` and the body contains `## Tasks`):
+   - Create or update `/tasks.md`.
+   - Add a `## Project: <Title>` section if missing.
+   - Mirror each unchecked task item from the project note's `## Tasks` section as `- [ ] <task text> [[<slug>]]`.
+   - Preserve existing unchecked tasks for other projects and avoid duplicate task lines.
+7. **Report back**: tell the user the note was created and at what path.
 
 ## Section templates
 
@@ -118,4 +123,5 @@ Only include the sections the user (wizard) or caller (argument mode) selected.
 - Area notes never include a Goals section
 - Only the selected sections appear in the body
 - Tags and related notes are in the frontmatter (`tags`, `relationships`) if provided
+- If note type is project and a `## Tasks` section exists, `/tasks.md` is updated with a `Project: <Title>` block containing the unchecked tasks linked to `[[<slug>]]`
 - User has been told the path
