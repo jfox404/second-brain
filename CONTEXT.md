@@ -87,3 +87,23 @@ _Avoid_: Auto-import, bulk import
 **Import source**:
 A file path or directory path from a legacy vault, passed to the import skill as the start of an import operation.
 _Avoid_: Input, path arg
+
+**Self-improvement loop**:
+The agent's ability to observe its own performance and evolve its skills, preferences, and context over time. Composed of four sub-operations: skill synthesis, skill refinement, user modeling, and reflection.
+_Avoid_: Learning loop, meta-cognition, auto-improvement
+
+**Skill synthesis**:
+The autonomous creation of a new skill file (`.agents/skills/<name>/SKILL.md`) after a complex or repeatable workflow is completed. Triggered by heuristics: 5+ tool calls, error recovery, user correction, or non-obvious procedure.
+_Avoid_: Skill creation, skill generation
+
+**Skill refinement**:
+Targeted patching of an existing skill file based on a user correction or a better path discovered during execution. Prefers minimal diffs (patch) over full rewrites to preserve what works.
+_Avoid_: Skill editing, skill rewriting
+
+**User modeling**:
+The agent's practice of tracking durable user preferences, communication style, domain context, and corrections across sessions. Persisted in a structured file (e.g., `USER.md`) at vault root.
+_Avoid_: Profiling, preferences
+
+**Reflection**:
+A periodic agent nudge — a system-level prompt at defined intervals (e.g., start of daily review, after task completion) that asks the agent to evaluate recent work and decide whether to persist any durable fact, skill update, or user model change.
+_Avoid_: Nudge, retrospective, debrief
