@@ -107,3 +107,15 @@ _Avoid_: Profiling, preferences
 **Reflection**:
 A periodic agent nudge — a system-level prompt at defined intervals (e.g., start of daily review, after task completion) that asks the agent to evaluate recent work and decide whether to persist any durable fact, skill update, or user model change.
 _Avoid_: Nudge, retrospective, debrief
+
+**Auto-maintenance**:
+AI-driven upkeep of vault health — tagging captures with PARA types, suggesting wikilinks between related notes, detecting orphan notes (no backlinks) and dead wikilinks, and flagging promotion/archiving opportunities. Runs as part of the daily review pass and as a standalone linting pass.
+_Avoid_: Cleanup, hygiene, housekeeping
+
+**Progressive summarization**:
+AI-applied layers of summarization on a configurable cadence. Layer 1 (at capture time): extract key claims and terms. Layer 2 (at ~1 week): write a one-paragraph synthesis of the note's core argument. Layer 3 (at ~1 month): link to related notes in the vault and write a broader synthesis positioning the note in the graph. Prevents notes from being stale blobs of raw text.
+_Avoid_: Deepening, enrichment layering
+
+**Connection surfacing**:
+Proactive resurfacing of old knowledge through three complementary patterns: (a) **capture-time recall** — when a new capture enters the system, AI checks for related old notes and surfaces them inline; (b) **weekly weave** — AI digests the week's captures into a digest that highlights latent connections; (c) **serendipity prompt** — a periodic suggestion showing a note not touched in N months with a one-sentence reminder of its content. The goal is zero-effort rediscovery.
+_Avoid_: Reminder system, recall engine
