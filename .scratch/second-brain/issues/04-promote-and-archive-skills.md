@@ -16,11 +16,11 @@
 
 **Blocked by:** 03 — Create project/area skill (needs valid project structure to promote/archive).
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] `promote-project` skill exists and converts file to folder
-- [ ] Related notes are moved into the folder
-- [ ] `[[wikilinks]]` are updated in other notes
-- [ ] `archive-project` skill exists and moves to `/04 - Archive/`
-- [ ] Archive skill reviews for salvageable content before archiving
-- [ ] Index notes updated after both operations
+- [x] `promote-project` skill exists and converts file to folder
+- [x] Related notes are moved into the folder
+- [x] `[[wikilinks]]` are updated in other notes
+- [x] `archive-project` skill exists and moves to `/04 - Archive/`
+- [x] Archive skill reviews for salvageable content before archiving
+- [x] Index notes updated after both operations

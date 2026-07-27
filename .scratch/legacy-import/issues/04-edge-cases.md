@@ -12,14 +12,16 @@ Three edge cases that the import skill must handle when they arise during a file
 
 3. **Asset copying**: When an imported file references an asset (`![image](assets/foo.png)`), the agent detects the reference, locates the file in the legacy vault's `/assets/`, copies it to the primary `/assets/`, and confirms the path still resolves.
 
+**Status:** done
+
 ## Acceptance criteria
 
-- [ ] Tag conflict is detected and presented to user with rename/keep/skip options
-- [ ] Renamed tag is written to OKF frontmatter with the glossary term
-- [ ] `source` field is converted to a "Sources" section with wikilinks
-- [ ] Source field is removed from frontmatter after conversion
-- [ ] Referenced assets are detected, copied, and paths verified
-- [ ] Missing assets are reported (warn, don't fail)
+- [x] Tag conflict is detected and presented to user with rename/keep/skip options
+- [x] Renamed tag is written to OKF frontmatter with the glossary term
+- [x] `source` field is converted to a "Sources" section with wikilinks
+- [x] Source field is removed from frontmatter after conversion
+- [x] Referenced assets are detected, copied, and paths verified
+- [x] Missing assets are reported (warn, don't fail)
 
 ## Blocked by
 

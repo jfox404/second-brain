@@ -10,11 +10,11 @@ Creates the note with YAML frontmatter: `title`, `type`, `status` (active), `sta
 
 **Blocked by:** 01 — Vault scaffold and sb CLI.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Skill file exists at `.agents/skills/create-project/SKILL.md`
-- [ ] Wizard mode creates project note with selected sections
-- [ ] Argument mode creates project non-interactively
-- [ ] Area notes created without goals section
-- [ ] File vs folder choice works
-- [ ] YAML frontmatter is correct
+- [x] Skill file exists at `.agents/skills/create-project/SKILL.md`
+- [x] Wizard mode creates project note with selected sections
+- [x] Argument mode creates project non-interactively
+- [x] Area notes created without goals section
+- [x] File vs folder choice works
+- [x] YAML frontmatter is correct

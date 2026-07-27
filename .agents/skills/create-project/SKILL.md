@@ -76,6 +76,7 @@ Apply defaults for any missing parameter and proceed to creation.
    - Mirror each unchecked task item from the project note's `## Tasks` section as `- [ ] <task text> [[<slug>]]`.
    - Preserve existing unchecked tasks for other projects and avoid duplicate task lines.
 7. **Report back**: tell the user the note was created and at what path.
+8. **Reflect**: after reporting back, run the **reflect skill** (`.agents/skills/reflect/SKILL.md`). It evaluates whether any user corrections, non-obvious procedures, or durable preferences were discovered during this run and routes findings to the user model or skill patches. If nothing notable, it reports "Reflection: nothing to persist."
 
 ## Section templates
 

@@ -91,6 +91,10 @@ Promoted <type>/<slug>.md to <type>/<slug>/index.md
   - MOC updated in index.md
 ```
 
+### 9. Reflect
+
+After completing the report, run the **reflect skill** (`.agents/skills/reflect/SKILL.md`). It evaluates whether any user corrections, non-obvious procedures, or durable preferences were discovered during this run and routes findings to the user model or skill patches. If nothing notable, it reports "Reflection: nothing to persist."
+
 ## Completion criteria
 
 - Source file removed, folder with `index.md` created

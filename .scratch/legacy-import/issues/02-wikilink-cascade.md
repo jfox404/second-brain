@@ -8,13 +8,15 @@ After importing a file, the agent scans its content for `[[wikilinks]]` to notes
 
 Imported cascade files go through the same frontmatter transformation as the parent import (issue 01).
 
+**Status:** done
+
 ## Acceptance criteria
 
-- [ ] Agent detects wikilinks in the imported file pointing to notes not in primary vault
-- [ ] Agent offers to import each linked file, one at a time
-- [ ] User can approve or skip per file
-- [ ] Cascade-imported files go through the same frontmatter transformation flow
-- [ ] After cascade, all wikilinks in the original file resolve correctly
+- [x] Agent detects wikilinks in the imported file pointing to notes not in primary vault
+- [x] Agent offers to import each linked file, one at a time
+- [x] User can approve or skip per file
+- [x] Cascade-imported files go through the same frontmatter transformation flow
+- [x] After cascade, all wikilinks in the original file resolve correctly
 
 ## Blocked by
 

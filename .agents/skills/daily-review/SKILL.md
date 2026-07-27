@@ -11,7 +11,7 @@ See [shared patterns](../_shared/patterns.md) for index note conventions and OKF
 
 Process unprocessed captures in exactly one daily note under `/00 - Inbox/Daily Note - YYYY-MM-DD.md` per run.
 
-A **capture** is a bullet line in the `## Captures` section starting with `- [HH:MM]`. An **unprocessed** capture is one without the `✅` prefix (`- ✅ [HH:MM]`).
+A **capture** is a bullet line in the `## 📓 Captures` section starting with `- [HH:MM]`. An **unprocessed** capture is one without the `✅` prefix (`- ✅ [HH:MM]`).
 
 ## Review scope
 
@@ -34,7 +34,7 @@ If the file is missing, report the missing date and stop.
 
 ### 2. Find unprocessed captures
 
-In the target daily note, in the `## Captures` section find every bullet matching `- [HH:MM]` (raw captures) but NOT `- ✅ [HH:MM]` (already processed).
+In the target daily note, in the `## 📓 Captures` section find every bullet matching `- [HH:MM]` (raw captures) but NOT `- ✅ [HH:MM]` (already processed).
 
 ### 3. Enrich each capture
 

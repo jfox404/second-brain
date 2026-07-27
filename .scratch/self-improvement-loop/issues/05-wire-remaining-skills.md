@@ -6,8 +6,8 @@
 
 **Status:** ready-for-agent
 
-- [ ] Add reflect invocation as final step of archive-project skill
-- [ ] Add reflect invocation as final step of promote-project skill
-- [ ] Add reflect invocation as final step of create-project skill
-- [ ] Add reflect invocation as final step of inbox-review skill
-- [ ] Verify: every vault-specific skill's SKILL.md contains "Finally, invoke the reflect skill" as the last workflow step
+- [x] Add reflect invocation as final step of archive-project skill
+- [x] Add reflect invocation as final step of promote-project skill
+- [x] Add reflect invocation as final step of create-project skill
+- [x] Add reflect invocation as final step of inbox-review skill
+- [x] Verify: every vault-specific skill's SKILL.md contains "Finally, invoke the reflect skill" as the last workflow step

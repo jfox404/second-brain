@@ -14,12 +14,12 @@ The skill instructs the AI to:
 
 **Blocked by:** 01 — Vault scaffold and sb CLI.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Skill file exists at `.agents/skills/daily-review/SKILL.md`
-- [ ] Invoking the skill in Copilot agent mode enriches captures (✅, tags, links, actions)
-- [ ] URL captures trigger resource note synthesis
-- [ ] `tasks.md` is created/updated correctly
-- [ ] Project `## Tasks` sections are maintained
-- [ ] Index notes are created/updated
-- [ ] Missing project notes are flagged
+- [x] Skill file exists at `.agents/skills/daily-review/SKILL.md`
+- [x] Invoking the skill in Copilot agent mode enriches captures (✅, tags, links, actions)
+- [x] URL captures trigger resource note synthesis
+- [x] `tasks.md` is created/updated correctly
+- [x] Project `## Tasks` sections are maintained
+- [x] Index notes are created/updated
+- [x] Missing project notes are flagged

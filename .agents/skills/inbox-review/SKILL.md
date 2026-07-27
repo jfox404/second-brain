@@ -99,6 +99,10 @@ Summarize what was done:
 - **Archive:** path to archived file
 - **Extractions:** count of action items, key decisions, notes promoted
 
+### 6. Reflect
+
+After completing the report, run the **reflect skill** (`.agents/skills/reflect/SKILL.md`). It evaluates whether any user corrections, non-obvious procedures, or durable preferences were discovered during this run and routes findings to the user model or skill patches. If nothing notable, it reports "Reflection: nothing to persist."
+
 ## Archive path rules
 
 | Inbox file type | Archive destination |

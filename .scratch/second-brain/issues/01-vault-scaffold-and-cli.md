@@ -12,13 +12,13 @@ Prerequisite: `npm install -g foam-cli`
 
 **Blocked by:** None — can start immediately.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] `foam-cli` installed globally
-- [ ] Vault directories created
-- [ ] Daily note template at `.foam/templates/daily-note.md`
-- [ ] Foam config added
-- [ ] `sb` CLI wrapper script installed, flags all work
-- [ ] `sb "thought"` creates daily note and appends capture
-- [ ] `sb --open` opens today's note
+- [x] `foam-cli` installed globally (via `bin/install`)
+- [x] Vault directories created (convention: `00 - Inbox/` instead of `00 - Daily/` per template)
+- [x] Daily note template at `.foam/templates/daily-note.md`
+- [x] Foam config in `.vscode/settings.json`
+- [x] `sb` CLI wrapper script installed, flags all work
+- [x] `sb "thought"` creates daily note and appends capture
+- [x] `sb --open` opens today's note
 - ~~[ ] `sb --type meeting "notes"` adds to ## Meetings section~~ *(removed — meetings captured via snippet instead)*

@@ -135,6 +135,10 @@ Archived 01 - Projects/<slug> → 04 - Archive/<slug>
   - tasks.md updated
 ```
 
+### 8. Reflect
+
+After completing the report, run the **reflect skill** (`.agents/skills/reflect/SKILL.md`). It evaluates whether any user corrections, non-obvious procedures, or durable preferences were discovered during this run and routes findings to the user model or skill patches. If nothing notable, it reports "Reflection: nothing to persist."
+
 ## Completion criteria
 
 - Project moved to `/04 - Archive/`

@@ -4,7 +4,7 @@
 
 **Blocked by:** 02 — User model writing (needs heuristic trigger infrastructure)
 
-**Status:** ready-for-agent
+**Status:** done
 
 - [x] Implement skill-to-correction matching: does the correction topic match any existing skill's name/description?
 - [x] Implement patch-only refinement mechanics (targeted edit)
